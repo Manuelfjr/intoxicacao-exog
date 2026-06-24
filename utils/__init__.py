@@ -2,10 +2,12 @@
 
 from .intoxicacao_analysis import (
     DEFAULT_END_YEAR,
+    DEFAULT_SEX_PALETTE,
     DEFAULT_START_YEAR,
     build_descriptive_stats,
     build_insight_lines,
     build_overall_by_year,
+    build_state_case_totals,
     build_state_summary,
     build_state_year,
     build_top_groups_by_state,
@@ -14,6 +16,7 @@ from .intoxicacao_analysis import (
     filter_year_window,
     format_insights_markdown,
     load_intoxicacao_tidy,
+    save_state_share_pie_charts,
     save_state_sex_timeseries_charts,
     summarize_year_coverage,
     write_text_report,
@@ -21,10 +24,12 @@ from .intoxicacao_analysis import (
 
 __all__ = [
     "DEFAULT_END_YEAR",
+    "DEFAULT_SEX_PALETTE",
     "DEFAULT_START_YEAR",
     "build_descriptive_stats",
     "build_insight_lines",
     "build_overall_by_year",
+    "build_state_case_totals",
     "build_state_summary",
     "build_state_year",
     "build_top_groups_by_state",
@@ -33,6 +38,7 @@ __all__ = [
     "filter_year_window",
     "format_insights_markdown",
     "load_intoxicacao_tidy",
+    "save_state_share_pie_charts",
     "save_state_sex_timeseries_charts",
     "summarize_year_coverage",
     "write_text_report",

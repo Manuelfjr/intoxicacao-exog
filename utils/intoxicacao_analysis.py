@@ -26,6 +26,11 @@ SEX_NAMES = {
     "M": "Masculino",
 }
 
+DEFAULT_SEX_PALETTE = {
+    "Masculino": "#5B7FA3",
+    "Feminino": "#C06A6A",
+}
+
 NS = {
     "main": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "rel": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
@@ -390,6 +395,27 @@ def build_top_groups_by_state(df: pd.DataFrame, top_n: int = 3) -> pd.DataFrame:
     return top_groups.reset_index(drop=True)
 
 
+def build_state_case_totals(year_totals: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate total cases by state, with and without sex stratification."""
+
+    total = (
+        year_totals.groupby("state", as_index=False)["total_year"]
+        .sum()
+        .assign(chart_group="Total")
+    )
+
+    by_sex = (
+        year_totals.groupby(["sex_label", "state"], as_index=False)["total_year"]
+        .sum()
+        .rename(columns={"sex_label": "chart_group"})
+    )
+
+    combined = pd.concat([total, by_sex], ignore_index=True)
+    return combined.sort_values(["chart_group", "total_year", "state"], ascending=[True, False, True]).reset_index(
+        drop=True
+    )
+
+
 def save_state_sex_timeseries_charts(
     year_totals: pd.DataFrame,
     output_dir: Path,
@@ -411,7 +437,7 @@ def save_state_sex_timeseries_charts(
         .reset_index(drop=True)
     )
     years = list(range(start_year, end_year + 1))
-    palette = {"Feminino": "#4C72B0", "Masculino": "#DD8452"}
+    palette = DEFAULT_SEX_PALETTE
     saved_paths: list[Path] = []
 
     for row in state_info.itertuples(index=False):
@@ -427,6 +453,7 @@ def save_state_sex_timeseries_charts(
             x="year",
             y="total_year",
             hue="sex_label",
+            hue_order=["Masculino", "Feminino"],
             marker="o",
             linewidth=2.5,
             markersize=8,
@@ -451,6 +478,80 @@ def save_state_sex_timeseries_charts(
         plt.close(fig)
 
         saved_paths.append(output_path)
+
+    return saved_paths
+
+
+def save_state_share_pie_charts(
+    year_totals: pd.DataFrame,
+    output_dir: Path,
+    dpi: int = 180,
+) -> dict[str, Path]:
+    """Save one pie chart for total cases and one for each sex."""
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    state_case_totals = build_state_case_totals(year_totals)
+    overall_order = (
+        state_case_totals.loc[state_case_totals["chart_group"] == "Total"]
+        .sort_values("total_year", ascending=False)["state"]
+        .tolist()
+    )
+    state_palette = dict(zip(overall_order, sns.color_palette("muted", n_colors=len(overall_order)).as_hex()))
+
+    chart_specs = [
+        ("Total", "distribuicao_estados_total.png", "Distribuicao total de casos por estado"),
+        ("Feminino", "distribuicao_estados_feminino.png", "Distribuicao de casos femininos por estado"),
+        ("Masculino", "distribuicao_estados_masculino.png", "Distribuicao de casos masculinos por estado"),
+    ]
+    saved_paths: dict[str, Path] = {}
+
+    for chart_group, filename, title in chart_specs:
+        chart_frame = (
+            state_case_totals.loc[state_case_totals["chart_group"] == chart_group, ["state", "total_year"]]
+            .sort_values("total_year", ascending=False)
+            .reset_index(drop=True)
+        )
+
+        values = chart_frame["total_year"].tolist()
+        labels = chart_frame["state"].tolist()
+        colors = [state_palette[state] for state in labels]
+        total = sum(values)
+
+        def _format_pct(pct: float) -> str:
+            absolute = pct / 100 * total
+            return f"{pct:.1f}%\n({absolute:,.0f})"
+
+        fig, ax = plt.subplots(figsize=(10, 10))
+        wedges, texts, autotexts = ax.pie(
+            values,
+            labels=labels,
+            colors=colors,
+            autopct=_format_pct,
+            startangle=90,
+            counterclock=False,
+            wedgeprops={"edgecolor": "white", "linewidth": 1.2},
+            textprops={"fontsize": 11},
+            pctdistance=0.72,
+            labeldistance=1.05,
+        )
+
+        for autotext in autotexts:
+            autotext.set_fontsize(10)
+            autotext.set_color("#2F2F2F")
+
+        ax.set_title(title)
+        ax.axis("equal")
+        fig.tight_layout()
+
+        output_path = output_dir / filename
+        fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
+        saved_paths[chart_group] = output_path
 
     return saved_paths
 
@@ -536,10 +637,12 @@ def write_text_report(output_path: Path, content: str) -> Path:
 
 __all__ = [
     "DEFAULT_END_YEAR",
+    "DEFAULT_SEX_PALETTE",
     "DEFAULT_START_YEAR",
     "build_descriptive_stats",
     "build_insight_lines",
     "build_overall_by_year",
+    "build_state_case_totals",
     "build_state_summary",
     "build_state_year",
     "build_top_groups_by_state",
@@ -548,6 +651,7 @@ __all__ = [
     "filter_year_window",
     "format_insights_markdown",
     "load_intoxicacao_tidy",
+    "save_state_share_pie_charts",
     "save_state_sex_timeseries_charts",
     "summarize_year_coverage",
     "write_text_report",
