@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard de Intoxicacao Exogena em Idosos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Vigilancia em Saude</p>
+          <h1>Intoxicacao exogena em idosos</h1>
+          <p class="hero-text">
+            Dashboard interativo sobre notificacoes de tentativa de suicidio por intoxicacao exogena,
+            com leitura por sexo, estado e comportamento anual.
+          </p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-chip" id="meta-period">Periodo</div>
+          <div class="meta-chip" id="meta-generated">Atualizacao</div>
+        </div>
+      </header>
+
+      <section class="toolbar panel">
+        <div class="toolbar-block">
+          <span class="toolbar-label">Sexo</span>
+          <div class="segmented-control" id="sex-filter"></div>
+        </div>
+        <div class="toolbar-block toolbar-block--states">
+          <span class="toolbar-label">Estados</span>
+          <div class="state-chip-group" id="state-filter"></div>
+        </div>
+        <button class="reset-button" id="reset-filters" type="button">Limpar filtros</button>
+      </section>
+
+      <section class="filter-summary panel">
+        <div>
+          <p class="panel-kicker">Recorte ativo</p>
+          <h2 id="filter-summary-title">Todos os estados e sexos</h2>
+        </div>
+        <p class="filter-summary-text" id="filter-summary-text"></p>
+      </section>
+
+      <section class="metric-grid">
+        <article class="metric-card panel">
+          <span class="metric-label">Casos no recorte</span>
+          <strong class="metric-value" id="metric-total">-</strong>
+          <span class="metric-note" id="metric-total-note"></span>
+        </article>
+        <article class="metric-card panel">
+          <span class="metric-label">Ultimo ano do recorte</span>
+          <strong class="metric-value" id="metric-latest">-</strong>
+          <span class="metric-note" id="metric-latest-note"></span>
+        </article>
+        <article class="metric-card panel">
+          <span class="metric-label">Estado lider</span>
+          <strong class="metric-value" id="metric-state">-</strong>
+          <span class="metric-note" id="metric-state-note"></span>
+        </article>
+        <article class="metric-card panel">
+          <span class="metric-label">Anos com notificacao</span>
+          <strong class="metric-value" id="metric-active-years">-</strong>
+          <span class="metric-note" id="metric-active-years-note"></span>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel panel-span-8">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Tendencia</p>
+              <h2>Serie anual do recorte</h2>
+            </div>
+          </div>
+          <div class="plot plot-lg" id="trend-chart"></div>
+        </article>
+
+        <article class="panel panel-span-4">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Mapa temporal</p>
+              <h2>Intensidade por estado e ano</h2>
+            </div>
+          </div>
+          <div class="plot plot-lg" id="heatmap-chart"></div>
+        </article>
+
+        <article class="panel panel-span-12">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Participacao territorial</p>
+              <h2>Distribuicao proporcional de casos por estado</h2>
+              <p class="panel-note" id="pie-note"></p>
+            </div>
+          </div>
+          <div class="pie-grid">
+            <div class="plot plot-md" id="pie-total-chart"></div>
+            <div class="plot plot-md" id="pie-feminino-chart"></div>
+            <div class="plot plot-md" id="pie-masculino-chart"></div>
+          </div>
+        </article>
+
+        <article class="panel panel-span-6">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Perfil toxico</p>
+              <h2>Grupos de agentes com maior volume</h2>
+            </div>
+          </div>
+          <div class="plot plot-lg" id="toxic-chart"></div>
+        </article>
+
+        <article class="panel panel-span-6">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Estado lider do recorte</p>
+              <h2>Comparacao anual por sexo</h2>
+              <p class="panel-note" id="detail-note"></p>
+            </div>
+          </div>
+          <div class="plot plot-lg" id="detail-chart"></div>
+        </article>
+
+        <article class="panel panel-span-7">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Resumo tabular</p>
+              <h2>Total acumulado por estado</h2>
+              <p class="panel-note" id="table-note"></p>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="state-table">
+              <thead>
+                <tr id="state-summary-head"></tr>
+              </thead>
+              <tbody id="state-summary-body"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel panel-span-5">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Leitura rapida</p>
+              <h2>Principais achados</h2>
+              <p class="panel-note" id="insight-note"></p>
+            </div>
+          </div>
+          <ul class="insight-list" id="insight-list"></ul>
+        </article>
+      </section>
+    </div>
+
+    <script src="./assets/plotly.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

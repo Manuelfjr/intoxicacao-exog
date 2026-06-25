@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import re
 import unicodedata
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 from pathlib import Path
+from shutil import copyfile
 from zipfile import ZipFile
 
 import pandas as pd
@@ -395,6 +398,132 @@ def build_top_groups_by_state(df: pd.DataFrame, top_n: int = 3) -> pd.DataFrame:
     return top_groups.reset_index(drop=True)
 
 
+def save_overall_analysis_charts(
+    overall_by_year: pd.DataFrame,
+    state_year: pd.DataFrame,
+    output_dir: Path,
+    sex_palette: dict[str, str] | None = None,
+    sex_hue_order: list[str] | None = None,
+    dpi: int = 180,
+) -> dict[str, Path]:
+    """Save the overall line chart, heatmap, and combined overview panel."""
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    palette = sex_palette or DEFAULT_SEX_PALETTE
+    hue_order = sex_hue_order or ["Masculino", "Feminino"]
+    saved_paths: dict[str, Path] = {}
+
+    line_fig, line_ax = plt.subplots(figsize=(11, 6))
+    sns.lineplot(
+        data=overall_by_year,
+        x="year",
+        y="total_year",
+        hue="sex_label",
+        hue_order=hue_order,
+        marker="o",
+        palette=palette,
+        ax=line_ax,
+    )
+    line_ax.set_title("Notificacoes anuais por sexo")
+    line_ax.set_xlabel("Ano")
+    line_ax.set_ylabel("Notificacoes")
+    line_ax.legend(title="Sexo")
+    line_fig.tight_layout()
+
+    line_path = output_dir / "notificacoes_anuais_por_sexo.png"
+    line_fig.savefig(line_path, dpi=dpi, bbox_inches="tight")
+    plt.close(line_fig)
+    saved_paths["line_chart"] = line_path
+
+    heatmap_data = state_year.pivot(index="state", columns="year", values="total_year").fillna(0.0)
+    heatmap_norm = (heatmap_data.T / heatmap_data.max(axis=1)).T.fillna(0.0)
+
+    heatmap_fig, heatmap_ax = plt.subplots(figsize=(11, 6))
+    sns.heatmap(heatmap_norm, cmap="YlOrRd", linewidths=0.3, ax=heatmap_ax)
+    heatmap_ax.set_title("Intensidade anual por estado")
+    heatmap_ax.set_xlabel("Ano")
+    heatmap_ax.set_ylabel("Estado")
+    heatmap_fig.tight_layout()
+
+    heatmap_path = output_dir / "intensidade_anual_por_estado.png"
+    heatmap_fig.savefig(heatmap_path, dpi=dpi, bbox_inches="tight")
+    plt.close(heatmap_fig)
+    saved_paths["heatmap_chart"] = heatmap_path
+
+    overview_fig, overview_axes = plt.subplots(1, 2, figsize=(18, 6))
+    sns.lineplot(
+        data=overall_by_year,
+        x="year",
+        y="total_year",
+        hue="sex_label",
+        hue_order=hue_order,
+        marker="o",
+        palette=palette,
+        ax=overview_axes[0],
+    )
+    overview_axes[0].set_title("Notificacoes anuais por sexo")
+    overview_axes[0].set_xlabel("Ano")
+    overview_axes[0].set_ylabel("Notificacoes")
+    overview_axes[0].legend(title="Sexo")
+
+    sns.heatmap(heatmap_norm, cmap="YlOrRd", linewidths=0.3, ax=overview_axes[1])
+    overview_axes[1].set_title("Intensidade anual por estado")
+    overview_axes[1].set_xlabel("Ano")
+    overview_axes[1].set_ylabel("Estado")
+
+    overview_fig.tight_layout()
+
+    overview_path = output_dir / "painel_visao_geral.png"
+    overview_fig.savefig(overview_path, dpi=dpi, bbox_inches="tight")
+    plt.close(overview_fig)
+    saved_paths["overview_panel"] = overview_path
+
+    return saved_paths
+
+
+def save_top_toxic_chart(
+    top_toxic: pd.DataFrame,
+    output_dir: Path,
+    sex_palette: dict[str, str] | None = None,
+    sex_hue_order: list[str] | None = None,
+    dpi: int = 180,
+) -> Path:
+    """Save the top toxic groups bar chart."""
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    palette = sex_palette or DEFAULT_SEX_PALETTE
+    hue_order = sex_hue_order or ["Masculino", "Feminino"]
+
+    fig, ax = plt.subplots(figsize=(12, 7))
+    sns.barplot(
+        data=top_toxic,
+        x="count",
+        y="toxic_group",
+        hue="sex_label",
+        hue_order=hue_order,
+        palette=palette,
+        ax=ax,
+    )
+    ax.set_title("Principais grupos toxicos por sexo")
+    ax.set_xlabel("Notificacoes acumuladas")
+    ax.set_ylabel("Grupo do agente toxico")
+    fig.tight_layout()
+
+    output_path = output_dir / "principais_grupos_toxicos_por_sexo.png"
+    fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    plt.close(fig)
+
+    return output_path
+
+
 def build_state_case_totals(year_totals: pd.DataFrame) -> pd.DataFrame:
     """Aggregate total cases by state, with and without sex stratification."""
 
@@ -556,6 +685,88 @@ def save_state_share_pie_charts(
     return saved_paths
 
 
+def build_dashboard_payload(
+    df: pd.DataFrame,
+    coverage: pd.DataFrame,
+    year_totals: pd.DataFrame,
+    state_summary: pd.DataFrame,
+    descriptive_stats: pd.DataFrame,
+    overall_by_year: pd.DataFrame,
+    state_year: pd.DataFrame,
+    state_case_totals: pd.DataFrame,
+    toxic_profile: pd.DataFrame,
+    top_groups_by_state: pd.DataFrame,
+    insight_lines: list[str],
+    start_year: int = DEFAULT_START_YEAR,
+    end_year: int = DEFAULT_END_YEAR,
+) -> dict[str, object]:
+    """Build a JSON-serializable payload for the dashboard frontend."""
+
+    total_cases = float(year_totals["total_year"].sum())
+    latest_year = int(year_totals["year"].max())
+    latest_total = float(year_totals.loc[year_totals["year"] == latest_year, "total_year"].sum())
+    total_by_sex = year_totals.groupby("sex_label", as_index=False)["total_year"].sum()
+    sex_totals = {row["sex_label"]: float(row["total_year"]) for row in total_by_sex.to_dict("records")}
+
+    dominant_state = state_summary.index[0]
+    dominant_state_total = float(state_summary.iloc[0]["Total"])
+    zero_filled_pairs = int((coverage["filled_zero_years"] > 0).sum())
+
+    return {
+        "metadata": {
+            "title": "Dashboard de intoxicacao exogena em idosos",
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "start_year": start_year,
+            "end_year": end_year,
+            "states": sorted(year_totals["state"].unique().tolist()),
+            "sexes": ["Masculino", "Feminino"],
+            "years": list(range(start_year, end_year + 1)),
+        },
+        "summary": {
+            "total_cases": total_cases,
+            "latest_year": latest_year,
+            "latest_total": latest_total,
+            "female_share": float(sex_totals.get("Feminino", 0.0) / total_cases * 100) if total_cases else 0.0,
+            "male_share": float(sex_totals.get("Masculino", 0.0) / total_cases * 100) if total_cases else 0.0,
+            "dominant_state": dominant_state,
+            "dominant_state_total": dominant_state_total,
+            "zero_filled_pairs": zero_filled_pairs,
+        },
+        "tables": {
+            "coverage": coverage.to_dict("records"),
+            "year_totals": year_totals.to_dict("records"),
+            "state_summary": state_summary.reset_index().rename_axis(columns=None).to_dict("records"),
+            "descriptive_stats": descriptive_stats.to_dict("records"),
+            "overall_by_year": overall_by_year.to_dict("records"),
+            "state_year": state_year.to_dict("records"),
+            "state_case_totals": state_case_totals.to_dict("records"),
+            "toxic_profile": toxic_profile.to_dict("records"),
+            "top_groups_by_state": top_groups_by_state.to_dict("records"),
+            "tidy_counts": df.to_dict("records"),
+        },
+        "insights": insight_lines,
+    }
+
+
+def write_json_report(output_path: Path, payload: dict[str, object]) -> Path:
+    """Write a JSON report to disk and return the written path."""
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return output_path
+
+
+def copy_plotly_bundle(output_path: Path) -> Path:
+    """Copy the local Plotly JavaScript bundle to the frontend assets directory."""
+
+    import plotly
+
+    source_path = Path(plotly.__file__).resolve().parent / "package_data" / "plotly.min.js"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    copyfile(source_path, output_path)
+    return output_path
+
+
 def build_insight_lines(
     year_totals: pd.DataFrame,
     state_summary: pd.DataFrame,
@@ -639,6 +850,7 @@ __all__ = [
     "DEFAULT_END_YEAR",
     "DEFAULT_SEX_PALETTE",
     "DEFAULT_START_YEAR",
+    "build_dashboard_payload",
     "build_descriptive_stats",
     "build_insight_lines",
     "build_overall_by_year",
@@ -648,11 +860,15 @@ __all__ = [
     "build_top_groups_by_state",
     "build_toxic_profile",
     "build_year_totals",
+    "copy_plotly_bundle",
     "filter_year_window",
     "format_insights_markdown",
     "load_intoxicacao_tidy",
+    "save_overall_analysis_charts",
     "save_state_share_pie_charts",
     "save_state_sex_timeseries_charts",
+    "save_top_toxic_chart",
     "summarize_year_coverage",
+    "write_json_report",
     "write_text_report",
 ]
