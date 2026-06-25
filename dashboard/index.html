@@ -23,9 +23,79 @@
             com leitura por sexo, estado e comportamento anual.
           </p>
         </div>
-        <div class="hero-meta">
-          <div class="meta-chip" id="meta-period">Periodo</div>
-          <div class="meta-chip" id="meta-generated">Atualizacao</div>
+        <div class="hero-side">
+          <div class="hero-meta">
+            <div class="meta-chip" id="meta-period">Periodo</div>
+            <div class="meta-chip" id="meta-generated">Atualizacao</div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-visual-shell">
+              <svg class="hero-illustration" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="heroSurface" x1="84" y1="52" x2="530" y2="336" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#F9FFFF" />
+                    <stop offset="1" stop-color="#E6F7F4" />
+                  </linearGradient>
+                  <linearGradient id="heroGlow" x1="468" y1="82" x2="468" y2="320" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#7EE2D5" stop-opacity="0.56" />
+                    <stop offset="1" stop-color="#7EE2D5" stop-opacity="0.02" />
+                  </linearGradient>
+                  <linearGradient id="shieldStroke" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#FFFFFF" />
+                    <stop offset="1" stop-color="#88D7CB" />
+                  </linearGradient>
+                </defs>
+
+                <circle cx="490" cy="100" r="112" fill="url(#heroGlow)" opacity="0.64" />
+                <rect x="72" y="62" width="468" height="286" rx="42" fill="url(#heroSurface)" />
+                <rect x="72" y="62" width="468" height="286" rx="42" stroke="#11796F" stroke-opacity="0.08" />
+
+                <path d="M144 240L208 196L282 228L346 178L414 216L476 148" stroke="#8EDFD2" stroke-width="3" stroke-linecap="round" />
+                <path d="M138 148L218 128L286 164L356 124L430 164L484 110" stroke="#B8ECE5" stroke-width="2.4" stroke-linecap="round" opacity="0.9" />
+
+                <circle cx="144" cy="240" r="7" fill="#FFFFFF" stroke="#56C5B6" stroke-width="3" />
+                <circle cx="208" cy="196" r="7" fill="#FFFFFF" stroke="#56C5B6" stroke-width="3" />
+                <circle cx="282" cy="228" r="7" fill="#FFFFFF" stroke="#56C5B6" stroke-width="3" />
+                <circle cx="346" cy="178" r="7" fill="#FFFFFF" stroke="#56C5B6" stroke-width="3" />
+                <circle cx="414" cy="216" r="7" fill="#FFFFFF" stroke="#56C5B6" stroke-width="3" />
+                <circle cx="476" cy="148" r="7" fill="#FFFFFF" stroke="#56C5B6" stroke-width="3" />
+
+                <rect x="124" y="108" width="132" height="70" rx="22" fill="#FFFFFF" fill-opacity="0.86" />
+                <path d="M148 150H170L182 124L198 160L212 136L232 136" stroke="#1A988B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="148" cy="150" r="4" fill="#1A988B" />
+                <circle cx="232" cy="136" r="4" fill="#1A988B" />
+
+                <rect x="376" y="94" width="116" height="82" rx="24" fill="#FFFFFF" fill-opacity="0.88" />
+                <path d="M400 147L418 138L434 142L448 124L466 130" stroke="#1A988B" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="448" cy="124" r="5" fill="#FFFFFF" stroke="#1A988B" stroke-width="3" />
+
+                <path d="M320 112C287 130 254 141 254 141V190C254 233 284 262 320 280C356 262 386 233 386 190V141C386 141 353 130 320 112Z" fill="#FFFFFF" fill-opacity="0.12" stroke="url(#shieldStroke)" stroke-width="5" />
+                <path d="M288 204H304L314 178L328 222L340 194H356" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="320" cy="164" r="16" fill="none" stroke="#FFFFFF" stroke-opacity="0.82" stroke-width="4" />
+
+                <rect x="142" y="284" width="182" height="22" rx="11" fill="#DFF6F1" />
+                <rect x="142" y="284" width="128" height="22" rx="11" fill="#71D2C4" fill-opacity="0.74" />
+                <rect x="350" y="276" width="120" height="30" rx="15" fill="#F3FBFA" />
+                <rect x="350" y="276" width="74" height="30" rx="15" fill="#BEECE5" />
+              </svg>
+            </div>
+
+            <div class="hero-floating-card hero-floating-card--top">
+              <span class="floating-kicker">Sinal observado</span>
+              <strong>Ritmo estavel</strong>
+              <svg class="floating-spark" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 24L26 19L44 22L61 11L79 15L98 7L114 14" stroke="#159688" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="61" cy="11" r="3.5" fill="#FFFFFF" stroke="#159688" stroke-width="2.4" />
+                <circle cx="98" cy="7" r="3.5" fill="#FFFFFF" stroke="#159688" stroke-width="2.4" />
+              </svg>
+            </div>
+
+            <div class="hero-floating-card hero-floating-card--bottom">
+              <span class="floating-kicker">Leitura integrada</span>
+              <strong>Sexo, estado e ano</strong>
+              <p>Recortes limpos para analise rapida.</p>
+            </div>
+          </div>
         </div>
       </header>
 
