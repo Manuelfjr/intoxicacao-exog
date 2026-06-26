@@ -11,6 +11,15 @@ const STATE_COLORS = {
   Acre: "#B8778D",
 };
 
+const STATE_LABELS = {
+  "Sao Paulo": "São Paulo",
+  Paraiba: "Paraíba",
+};
+
+const TOXIC_GROUP_LABELS = {
+  "Cosmético_higiene pessoal": "Cosmético e higiene pessoal",
+};
+
 const CHART_CONFIG = {
   displayModeBar: false,
   responsive: true,
@@ -45,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.innerHTML = `
       <main style="padding: 32px; font-family: 'Source Sans 3', 'Trebuchet MS', sans-serif; color: #16313A;">
         <h1>Falha ao carregar o dashboard</h1>
-        <p>Nao foi possivel inicializar os dados da interface.</p>
+        <p>Não foi possível inicializar os dados da interface.</p>
         <pre style="white-space: pre-wrap; background: #F5F8F9; padding: 16px; border-radius: 12px;">${String(error.message || error)}</pre>
       </main>
     `;
@@ -59,14 +68,14 @@ async function fetchDashboardData() {
 
   const response = await fetch("./data/dashboard_data.json");
   if (!response.ok) {
-    throw new Error("Nao foi possivel carregar os dados do dashboard.");
+    throw new Error("Não foi possível carregar os dados do dashboard.");
   }
   return response.json();
 }
 
 function hydrateMetadata() {
   const { start_year: startYear, end_year: endYear, generated_at_utc: generatedAt } = dashboardData.metadata;
-  document.getElementById("meta-period").textContent = `Periodo ${startYear} - ${endYear}`;
+  document.getElementById("meta-period").textContent = `Período ${startYear} - ${endYear}`;
   document.getElementById("meta-generated").textContent = `Atualizado em ${formatDateTime(generatedAt)}`;
 }
 
@@ -113,7 +122,7 @@ function buildStateFilter() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `chip${selectedStates.includes(state) ? " is-active" : ""}`;
-    button.textContent = state;
+    button.textContent = formatStateLabel(state);
     button.setAttribute("aria-pressed", String(selectedStates.includes(state)));
     button.title = "Clique para incluir ou remover este estado do recorte";
     button.addEventListener("click", () => toggleStateSelection(state));
@@ -186,15 +195,16 @@ function renderFilterSummary(rows) {
   const titleNode = document.getElementById("filter-summary-title");
   const textNode = document.getElementById("filter-summary-text");
   const totalStates = dashboardData.metadata.states.length;
+  const selectedStateLabels = formatStateList(selectedStates);
   const stateLabel =
     selectedStates.length === totalStates
       ? "Todos os estados"
-      : `${selectedStates.length} estado(s): ${selectedStates.join(", ")}`;
+      : `${selectedStates.length} estado(s): ${selectedStateLabels.join(", ")}`;
   const sexLabel = selectedSex === "Todos" ? "todos os sexos" : selectedSex.toLowerCase();
   const totalCases = sum(rows.map((row) => row.total_year));
 
   titleNode.textContent = `${stateLabel} | ${sexLabel}`;
-  textNode.textContent = `${formatInteger(totalCases)} casos no recorte atual, com visualizacoes sincronizadas para tendencia, heatmap, tabela e insights.`;
+  textNode.textContent = `${formatInteger(totalCases)} casos no recorte atual, com visualizações sincronizadas para tendência, heatmap, tabela e insights.`;
 }
 
 function renderMetrics(rows) {
@@ -219,7 +229,7 @@ function renderMetrics(rows) {
   setMetric("metric-latest", String(latestYear), "metric-latest-note", `${formatInteger(latestYearTotal)} casos`);
   setMetric(
     "metric-state",
-    dominantEntry ? dominantEntry.state : "-",
+    dominantEntry ? formatStateLabel(dominantEntry.state) : "-",
     "metric-state-note",
     dominantEntry ? `${formatInteger(dominantEntry.total)} casos acumulados` : "Sem registros"
   );
@@ -227,7 +237,7 @@ function renderMetrics(rows) {
     "metric-active-years",
     String(yearsWithCases),
     "metric-active-years-note",
-    selectedSex === "Todos" ? "anos com pelo menos uma notificacao" : `anos com ${selectedSex.toLowerCase()}`
+    selectedSex === "Todos" ? "anos com pelo menos uma notificação" : `anos com ${selectedSex.toLowerCase()}`
   );
 }
 
@@ -273,7 +283,7 @@ function renderTrendChart(rows) {
     {
       ...PLOT_LAYOUT_BASE,
       xaxis: { title: "Ano", tickmode: "linear" },
-      yaxis: { title: "Notificacoes" },
+      yaxis: { title: "Notificações" },
       legend: { orientation: "h", y: 1.14 },
     },
     CHART_CONFIG
@@ -321,7 +331,7 @@ function renderHeatmap(rows) {
           title: "x / max(x)",
         },
         hovertemplate:
-          "Estado: %{y}<br>Ano: %{x}<br>Casos: %{customdata:,.0f}<br>Indice relativo: %{z:.2f}<extra></extra>",
+          "Estado: %{y}<br>Ano: %{x}<br>Casos: %{customdata:,.0f}<br>Índice relativo: %{z:.2f}<extra></extra>",
       },
     ],
     {
@@ -338,7 +348,7 @@ function renderPieCharts(rows) {
   const pieNote = document.getElementById("pie-note");
 
   if (selectedSex === "Todos") {
-    pieNote.textContent = "Os tres graficos comparam total, feminino e masculino dentro dos estados selecionados.";
+    pieNote.textContent = "Os três gráficos comparam total, feminino e masculino dentro dos estados selecionados.";
     renderPieChart("pie-total-chart", rows, "Total por estado", null);
     renderPieChart("pie-feminino-chart", rows, "Feminino por estado", "Feminino");
     renderPieChart("pie-masculino-chart", rows, "Masculino por estado", "Masculino");
@@ -346,7 +356,7 @@ function renderPieCharts(rows) {
   }
 
   const comparatorSex = selectedSex === "Feminino" ? "Masculino" : "Feminino";
-  pieNote.textContent = `O primeiro grafico segue o filtro ativo; os outros dois mantem contexto comparativo nos mesmos estados.`;
+  pieNote.textContent = `O primeiro gráfico segue o filtro ativo; os outros dois mantêm contexto comparativo nos mesmos estados.`;
   renderPieChart("pie-total-chart", rows, `Recorte atual (${selectedSex})`, selectedSex);
   renderPieChart("pie-feminino-chart", rows, "Total por estado", null);
   renderPieChart("pie-masculino-chart", rows, `${comparatorSex} por estado`, comparatorSex);
@@ -411,7 +421,7 @@ function renderToxicChart(rows) {
       type: "bar",
       orientation: "h",
       name: sex,
-      y: ranked.map((item) => item.toxicGroup),
+      y: ranked.map((item) => formatToxicGroupLabel(item.toxicGroup)),
       x: ranked.map((item) => item[sex]),
       marker: { color: SEX_PALETTE[sex] },
     }));
@@ -421,7 +431,7 @@ function renderToxicChart(rows) {
         type: "bar",
         orientation: "h",
         name: selectedSex,
-        y: ranked.map((item) => item.toxicGroup),
+        y: ranked.map((item) => formatToxicGroupLabel(item.toxicGroup)),
         x: ranked.map((item) => item[selectedSex]),
         marker: { color: SEX_PALETTE[selectedSex] },
       },
@@ -435,7 +445,7 @@ function renderToxicChart(rows) {
       ...PLOT_LAYOUT_BASE,
       margin: { t: 30, r: 20, b: 50, l: 180 },
       barmode: selectedSex === "Todos" ? "group" : "relative",
-      xaxis: { title: "Notificacoes" },
+      xaxis: { title: "Notificações" },
       yaxis: { title: "" },
       legend: { orientation: "h", y: 1.12 },
     },
@@ -457,11 +467,11 @@ function renderDetailChart(rows) {
   const sexes = selectedSex === "Todos" ? ["Masculino", "Feminino"] : [selectedSex];
 
   if (!detailState) {
-    note.textContent = "Sem estado disponivel para o recorte atual.";
+    note.textContent = "Sem estado disponível para o recorte atual.";
   } else if (detailTotal > 0) {
-    note.textContent = `Foco automatico em ${detailState}, com ${formatInteger(detailTotal)} casos acumulados no recorte atual.`;
+    note.textContent = `Foco automático em ${formatStateLabel(detailState)}, com ${formatInteger(detailTotal)} casos acumulados no recorte atual.`;
   } else {
-    note.textContent = `Foco automatico em ${detailState}. No recorte atual, os estados selecionados nao registram notificacoes.`;
+    note.textContent = `Foco automático em ${formatStateLabel(detailState)}. No recorte atual, os estados selecionados não registram notificações.`;
   }
 
   const traces = sexes.map((sex) => {
@@ -484,13 +494,13 @@ function renderDetailChart(rows) {
     {
       ...PLOT_LAYOUT_BASE,
       title: {
-        text: detailState || "Estado",
+        text: detailState ? formatStateLabel(detailState) : "Estado",
         x: 0.02,
         xanchor: "left",
         font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 18 },
       },
       xaxis: { title: "Ano", tickmode: "linear" },
-      yaxis: { title: "Notificacoes" },
+      yaxis: { title: "Notificações" },
       legend: { orientation: "h", y: 1.14 },
     },
     CHART_CONFIG
@@ -530,7 +540,7 @@ function renderStateTable(rows) {
       .forEach((row) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.state}</td>
+          <td>${formatStateLabel(row.state)}</td>
           <td>${formatInteger(row.male)}</td>
           <td>${formatInteger(row.female)}</td>
           <td>${formatInteger(row.total)}</td>
@@ -540,7 +550,7 @@ function renderStateTable(rows) {
     return;
   }
 
-  note.textContent = `Tabela focada apenas no recorte ${selectedSex.toLowerCase()}, com participacao percentual por estado.`;
+  note.textContent = `Tabela focada apenas no recorte ${selectedSex.toLowerCase()}, com participação percentual por estado.`;
   head.innerHTML = `
     <th>Estado</th>
     <th>${selectedSex}</th>
@@ -561,7 +571,7 @@ function renderStateTable(rows) {
     .forEach((row) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${row.state}</td>
+        <td>${formatStateLabel(row.state)}</td>
         <td>${formatInteger(row.total)}</td>
         <td>${row.share.toFixed(1)}%</td>
       `;
@@ -586,7 +596,7 @@ function renderInsights(rows, tidyRows) {
 
 function buildDynamicInsights(rows, tidyRows) {
   if (!rows.length) {
-    return ["Nao ha registros para o recorte atual."];
+    return ["Não há registros para o recorte atual."];
   }
 
   const totalCases = sum(rows.map((row) => row.total_year));
@@ -614,13 +624,13 @@ function buildDynamicInsights(rows, tidyRows) {
   const topToxic = groupedToxic[0];
 
   const insights = [
-    `${formatInteger(totalCases)} casos compoem o recorte atual, distribuido por ${selectedStates.length} estado(s).`,
-    `${topState.state} lidera este recorte com ${formatInteger(topState.total)} notificacoes acumuladas.`,
-    `O pico anual do recorte ocorre em ${peakYear.year}, com ${formatInteger(peakYear.total)} notificacoes.`,
+    `${formatInteger(totalCases)} casos compõem o recorte atual, distribuído por ${selectedStates.length} estado(s).`,
+    `${formatStateLabel(topState.state)} lidera este recorte com ${formatInteger(topState.total)} notificações acumuladas.`,
+    `O pico anual do recorte ocorre em ${peakYear.year}, com ${formatInteger(peakYear.total)} notificações.`,
   ];
 
   if (topToxic) {
-    insights.push(`${topToxic.toxicGroup} e o grupo toxico mais frequente no recorte atual.`);
+    insights.push(`${formatToxicGroupLabel(topToxic.toxicGroup)} é o grupo tóxico mais frequente no recorte atual.`);
   }
 
   if (selectedSex === "Todos") {
@@ -667,4 +677,16 @@ function formatDateTime(value) {
     dateStyle: "short",
     timeStyle: "short",
   }).format(new Date(value));
+}
+
+function formatStateLabel(value) {
+  return STATE_LABELS[value] || value;
+}
+
+function formatStateList(values) {
+  return values.map((value) => formatStateLabel(value));
+}
+
+function formatToxicGroupLabel(value) {
+  return TOXIC_GROUP_LABELS[value] || value;
 }

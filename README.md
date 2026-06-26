@@ -1,6 +1,6 @@
-# Dashboard de intoxicacao exogena em idosos
+# Dashboard de intoxicação exógena em idosos
 
-Projeto de analise e visualizacao sobre notificacoes de tentativa de suicidio por intoxicacao exogena na populacao idosa, com recortes por sexo, estado e ano.
+Projeto de análise e visualização sobre notificações de tentativa de suicídio por intoxicação exógena na população idosa, com recortes por sexo, estado e ano.
 
 ## Rodando localmente
 
@@ -19,17 +19,17 @@ poetry run python dashboard/export_html.py
 
 O arquivo gerado fica em `dashboard/dashboard_standalone.html`.
 
-## Gerando a versao para GitHub Pages
+## Gerando a versão para GitHub Pages
 
 ```bash
 poetry run python dashboard/build_github_pages.py
 ```
 
-Esse comando cria a pasta `site/`, pronta para deploy estatico no GitHub Pages.
+Esse comando cria a pasta `site/`, pronta para deploy estático no GitHub Pages.
 
 ## Publicando no GitHub Pages
 
-1. Crie um repositorio no GitHub.
+1. Crie um repositório no GitHub.
 2. Adicione o remoto:
 
 ```bash
@@ -41,20 +41,20 @@ git push -u origin main
 4. Em `Build and deployment`, escolha `GitHub Actions` como source.
 5. O workflow `.github/workflows/deploy-pages.yml` vai buildar e publicar o dashboard automaticamente a cada push na branch `main`.
 
-Se o repositorio for um project site comum, a URL final tende a ser:
+Se o repositório for um project site comum, a URL final tende a ser:
 
 ```text
 https://SEU_USUARIO.github.io/SEU_REPOSITORIO/
 ```
 
-Se o repositorio se chamar `SEU_USUARIO.github.io`, a URL tende a ser a raiz:
+Se o repositório se chamar `SEU_USUARIO.github.io`, a URL tende a ser a raiz:
 
 ```text
 https://SEU_USUARIO.github.io/
 ```
 
-## Observacoes importantes
+## Observações importantes
 
-- O GitHub Pages publica arquivos estaticos. Por isso o Python roda no GitHub Actions apenas para gerar os artefatos do site antes do deploy.
-- Se voce estiver no GitHub Free, o repositorio precisa ser publico para usar GitHub Pages.
-- Revise o conteudo do repositorio antes de publicar. Se houver arquivos sensiveis, remova-os antes do primeiro push.
+- O GitHub Pages publica arquivos estáticos. Por isso o Python roda no GitHub Actions apenas para gerar os artefatos do site antes do deploy.
+- Se você estiver no GitHub Free, o repositório precisa ser público para usar GitHub Pages.
+- Revise o conteúdo do repositório antes de publicar. Se houver arquivos sensíveis, remova-os antes do primeiro push.

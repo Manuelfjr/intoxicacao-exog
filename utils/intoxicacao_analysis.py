@@ -29,6 +29,18 @@ SEX_NAMES = {
     "M": "Masculino",
 }
 
+DISPLAY_STATE_NAMES = {
+    "Acre": "Acre",
+    "Distrito Federal": "Distrito Federal",
+    "Paraiba": "Paraíba",
+    "Santa Catarina": "Santa Catarina",
+    "Sao Paulo": "São Paulo",
+}
+
+DISPLAY_TOXIC_GROUP_NAMES = {
+    "Cosmético_higiene pessoal": "Cosmético e higiene pessoal",
+}
+
 DEFAULT_SEX_PALETTE = {
     "Masculino": "#5B7FA3",
     "Feminino": "#C06A6A",
@@ -120,6 +132,14 @@ def _slugify_text(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value)
     ascii_value = normalized.encode("ascii", "ignore").decode("ascii")
     return re.sub(r"[^a-z0-9]+", "_", ascii_value.lower()).strip("_")
+
+
+def _display_state_name(value: str) -> str:
+    return DISPLAY_STATE_NAMES.get(value, value)
+
+
+def _display_toxic_group_name(value: str) -> str:
+    return DISPLAY_TOXIC_GROUP_NAMES.get(value, value)
 
 
 def load_intoxicacao_tidy(data_path: Path) -> pd.DataFrame:
@@ -428,9 +448,9 @@ def save_overall_analysis_charts(
         palette=palette,
         ax=line_ax,
     )
-    line_ax.set_title("Notificacoes anuais por sexo")
+    line_ax.set_title("Notificações anuais por sexo")
     line_ax.set_xlabel("Ano")
-    line_ax.set_ylabel("Notificacoes")
+    line_ax.set_ylabel("Notificações")
     line_ax.legend(title="Sexo")
     line_fig.tight_layout()
 
@@ -439,7 +459,11 @@ def save_overall_analysis_charts(
     plt.close(line_fig)
     saved_paths["line_chart"] = line_path
 
-    heatmap_data = state_year.pivot(index="state", columns="year", values="total_year").fillna(0.0)
+    heatmap_data = (
+        state_year.assign(state=lambda frame: frame["state"].map(_display_state_name))
+        .pivot(index="state", columns="year", values="total_year")
+        .fillna(0.0)
+    )
     heatmap_norm = (heatmap_data.T / heatmap_data.max(axis=1)).T.fillna(0.0)
 
     heatmap_fig, heatmap_ax = plt.subplots(figsize=(11, 6))
@@ -465,9 +489,9 @@ def save_overall_analysis_charts(
         palette=palette,
         ax=overview_axes[0],
     )
-    overview_axes[0].set_title("Notificacoes anuais por sexo")
+    overview_axes[0].set_title("Notificações anuais por sexo")
     overview_axes[0].set_xlabel("Ano")
-    overview_axes[0].set_ylabel("Notificacoes")
+    overview_axes[0].set_ylabel("Notificações")
     overview_axes[0].legend(title="Sexo")
 
     sns.heatmap(heatmap_norm, cmap="YlOrRd", linewidths=0.3, ax=overview_axes[1])
@@ -512,9 +536,9 @@ def save_top_toxic_chart(
         palette=palette,
         ax=ax,
     )
-    ax.set_title("Principais grupos toxicos por sexo")
-    ax.set_xlabel("Notificacoes acumuladas")
-    ax.set_ylabel("Grupo do agente toxico")
+    ax.set_title("Principais grupos tóxicos por sexo")
+    ax.set_xlabel("Notificações acumuladas")
+    ax.set_ylabel("Grupo do agente tóxico")
     fig.tight_layout()
 
     output_path = output_dir / "principais_grupos_toxicos_por_sexo.png"
@@ -590,9 +614,9 @@ def save_state_sex_timeseries_charts(
             ax=ax,
         )
 
-        ax.set_title(f"{row.state} - trajetoria anual por sexo")
+        ax.set_title(f"{_display_state_name(row.state)} - trajetória anual por sexo")
         ax.set_xlabel("Ano")
-        ax.set_ylabel("Notificacoes")
+        ax.set_ylabel("Notificações")
         ax.set_xlim(start_year, end_year)
         ax.set_xticks(years)
         ax.tick_params(axis="x", rotation=45)
@@ -632,9 +656,9 @@ def save_state_share_pie_charts(
     state_palette = dict(zip(overall_order, sns.color_palette("muted", n_colors=len(overall_order)).as_hex()))
 
     chart_specs = [
-        ("Total", "distribuicao_estados_total.png", "Distribuicao total de casos por estado"),
-        ("Feminino", "distribuicao_estados_feminino.png", "Distribuicao de casos femininos por estado"),
-        ("Masculino", "distribuicao_estados_masculino.png", "Distribuicao de casos masculinos por estado"),
+        ("Total", "distribuicao_estados_total.png", "Distribuição total de casos por estado"),
+        ("Feminino", "distribuicao_estados_feminino.png", "Distribuição de casos femininos por estado"),
+        ("Masculino", "distribuicao_estados_masculino.png", "Distribuição de casos masculinos por estado"),
     ]
     saved_paths: dict[str, Path] = {}
 
@@ -646,8 +670,9 @@ def save_state_share_pie_charts(
         )
 
         values = chart_frame["total_year"].tolist()
-        labels = chart_frame["state"].tolist()
-        colors = [state_palette[state] for state in labels]
+        raw_labels = chart_frame["state"].tolist()
+        labels = [_display_state_name(state) for state in raw_labels]
+        colors = [state_palette[state] for state in raw_labels]
         total = sum(values)
 
         def _format_pct(pct: float) -> str:
@@ -714,7 +739,7 @@ def build_dashboard_payload(
 
     return {
         "metadata": {
-            "title": "Dashboard de intoxicacao exogena em idosos",
+            "title": "Dashboard de intoxicação exógena em idosos",
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "start_year": start_year,
             "end_year": end_year,
@@ -805,15 +830,15 @@ def build_insight_lines(
         for row in zero_filled.itertuples(index=False)
     )
 
-    ufs = ", ".join(sorted(year_totals["state"].unique()))
+    ufs = ", ".join(sorted(_display_state_name(state) for state in year_totals["state"].unique()))
     lines = [
-        f"A analise considera somente o intervalo {start_year}-{end_year}; registros fora dessa janela, como 1991, foram descartados.",
-        f"A base consolidada cobre {year_totals['state'].nunique()} UFs ({ufs}) e soma {overall_total:,} notificacoes no periodo.",
-        f"Mulheres concentram {female_share:.1f}% das notificacoes, considerando a serie anual completada com zeros quando necessario.",
-        f"{top_state} responde por {top_state_share:.1f}% do total observado ({top_state_total:,} notificacoes somando os dois sexos).",
+        f"A análise considera somente o intervalo {start_year}-{end_year}; registros fora dessa janela, como 1991, foram descartados.",
+        f"A base consolidada cobre {year_totals['state'].nunique()} UFs ({ufs}) e soma {overall_total:,} notificações no período.",
+        f"Mulheres concentram {female_share:.1f}% das notificações, considerando a série anual completada com zeros quando necessário.",
+        f"{_display_state_name(top_state)} responde por {top_state_share:.1f}% do total observado ({top_state_total:,} notificações somando os dois sexos).",
         (
-            f"O ultimo ano da serie, {latest_year}, registra "
-            f"{int(latest_totals.get('Feminino', 0)):,} notificacoes femininas e "
+            f"O último ano da série, {latest_year}, registra "
+            f"{int(latest_totals.get('Feminino', 0)):,} notificações femininas e "
             f"{int(latest_totals.get('Masculino', 0)):,} masculinas."
         ),
         (
@@ -825,7 +850,7 @@ def build_insight_lines(
 
     if zero_fill_detail:
         lines.append(
-            f"Anos ausentes foram preenchidos com zero para manter a serie completa de {start_year} a {end_year}: {zero_fill_detail}."
+            f"Anos ausentes foram preenchidos com zero para manter a série completa de {start_year} a {end_year}: {zero_fill_detail}."
         )
 
     return lines
