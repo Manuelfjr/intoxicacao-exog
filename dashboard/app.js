@@ -12,8 +12,11 @@ const STATE_COLORS = {
 };
 
 const STATE_LABELS = {
+  Acre: "Acre",
+  "Distrito Federal": "Distrito Federal",
   "Sao Paulo": "São Paulo",
   Paraiba: "Paraíba",
+  "Santa Catarina": "Santa Catarina",
 };
 
 const PIE_PALETTE = [
@@ -400,7 +403,7 @@ function renderPieChart(elementId, rows, title, sexFilter) {
       {
         type: "pie",
         hole: 0.7,
-        labels: grouped.map((item) => item.state),
+        labels: grouped.map((item) => formatStateLabel(item.state)),
         values: grouped.map((item) => item.total),
         sort: false,
         direction: "clockwise",
@@ -433,10 +436,10 @@ function renderPieChart(elementId, rows, title, sexFilter) {
         orientation: "h",
         x: 0.5,
         xanchor: "center",
-        y: -0.14,
+        y: -0.16,
         yanchor: "top",
-        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#5d7880" },
-        itemwidth: 78,
+        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 14, color: "#4e6a73" },
+        itemwidth: 108,
         itemsizing: "constant",
       },
       annotations: [
@@ -501,17 +504,18 @@ function renderToxicChart(rows) {
     traces,
     {
       ...PLOT_LAYOUT_BASE,
-      margin: { t: 30, r: 20, b: 56, l: 260 },
+      margin: { t: 30, r: 160, b: 56, l: 40 },
       barmode: selectedSex === "Todos" ? "group" : "relative",
       xaxis: { title: "Notificações", automargin: true },
       yaxis: {
         title: "",
         automargin: true,
-        tickpadding: 18,
-        ticklabelstandoff: 16,
+        side: "right",
+        tickpadding: 12,
+        ticklabelstandoff: 10,
         tickfont: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#16313A" },
       },
-      legend: { orientation: "h", y: 1.12, x: 0.02, xanchor: "left" },
+      legend: { orientation: "h", y: 1.12, x: 0.5, xanchor: "center" },
     },
     CHART_CONFIG
   );

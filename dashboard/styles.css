@@ -456,14 +456,18 @@ body::after {
 .plot {
   min-height: 340px;
   padding: 0 12px 16px;
+  width: min(100%, calc(100% - 28px));
+  margin: 0 auto;
 }
 
 .plot-lg {
   min-height: 430px;
+  width: min(100%, calc(100% - 20px));
 }
 
 .plot-md {
   min-height: 450px;
+  width: min(100%, calc(100% - 20px));
 }
 
 .pie-grid {
@@ -471,6 +475,10 @@ body::after {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   padding: 2px 12px 8px;
+}
+
+.pie-grid .plot {
+  width: 100%;
 }
 
 .table-wrapper {

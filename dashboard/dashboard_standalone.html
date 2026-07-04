@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard de Intoxicação Exógena em Idosos</title>
+    <link rel="icon" href="./favicon.svg?v=20260704" type="image/svg+xml" />
+    <link rel="shortcut icon" href="./favicon.svg?v=20260704" />
     <style>
 :root {
   --bg: #f6fbfc;
@@ -463,14 +465,18 @@ body::after {
 .plot {
   min-height: 340px;
   padding: 0 12px 16px;
+  width: min(100%, calc(100% - 28px));
+  margin: 0 auto;
 }
 
 .plot-lg {
   min-height: 430px;
+  width: min(100%, calc(100% - 20px));
 }
 
 .plot-md {
   min-height: 450px;
+  width: min(100%, calc(100% - 20px));
 }
 
 .pie-grid {
@@ -478,6 +484,10 @@ body::after {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   padding: 2px 12px 8px;
+}
+
+.pie-grid .plot {
+  width: 100%;
 }
 
 .table-wrapper {
@@ -4737,7 +4747,7 @@ return Plotly;
 window.__DASHBOARD_DATA__ = {
   "metadata": {
     "title": "Dashboard de intoxicação exógena em idosos",
-    "generated_at_utc": "2026-07-04T20:12:39.239473+00:00",
+    "generated_at_utc": "2026-07-04T20:31:30.522583+00:00",
     "start_year": 2007,
     "end_year": 2025,
     "states": [
@@ -25946,8 +25956,11 @@ const STATE_COLORS = {
 };
 
 const STATE_LABELS = {
+  Acre: "Acre",
+  "Distrito Federal": "Distrito Federal",
   "Sao Paulo": "São Paulo",
   Paraiba: "Paraíba",
+  "Santa Catarina": "Santa Catarina",
 };
 
 const PIE_PALETTE = [
@@ -26334,7 +26347,7 @@ function renderPieChart(elementId, rows, title, sexFilter) {
       {
         type: "pie",
         hole: 0.7,
-        labels: grouped.map((item) => item.state),
+        labels: grouped.map((item) => formatStateLabel(item.state)),
         values: grouped.map((item) => item.total),
         sort: false,
         direction: "clockwise",
@@ -26367,10 +26380,10 @@ function renderPieChart(elementId, rows, title, sexFilter) {
         orientation: "h",
         x: 0.5,
         xanchor: "center",
-        y: -0.14,
+        y: -0.16,
         yanchor: "top",
-        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#5d7880" },
-        itemwidth: 78,
+        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 14, color: "#4e6a73" },
+        itemwidth: 108,
         itemsizing: "constant",
       },
       annotations: [
@@ -26435,17 +26448,18 @@ function renderToxicChart(rows) {
     traces,
     {
       ...PLOT_LAYOUT_BASE,
-      margin: { t: 30, r: 20, b: 56, l: 260 },
+      margin: { t: 30, r: 160, b: 56, l: 40 },
       barmode: selectedSex === "Todos" ? "group" : "relative",
       xaxis: { title: "Notificações", automargin: true },
       yaxis: {
         title: "",
         automargin: true,
-        tickpadding: 18,
-        ticklabelstandoff: 16,
+        side: "right",
+        tickpadding: 12,
+        ticklabelstandoff: 10,
         tickfont: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#16313A" },
       },
-      legend: { orientation: "h", y: 1.12, x: 0.02, xanchor: "left" },
+      legend: { orientation: "h", y: 1.12, x: 0.5, xanchor: "center" },
     },
     CHART_CONFIG
   );

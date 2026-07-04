@@ -13,7 +13,7 @@ if str(ROOT) not in sys.path:
 from dashboard.run_local import build_dashboard_files
 
 
-PUBLIC_FILES = ("index.html", "styles.css", "app.js")
+PUBLIC_FILES = ("index.html", "styles.css", "app.js", "favicon.svg")
 
 
 def build_pages_site(root: Path) -> Path:
