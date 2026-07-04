@@ -16,8 +16,27 @@ const STATE_LABELS = {
   Paraiba: "Paraíba",
 };
 
+const PIE_PALETTE = [
+  "#5C7FA3",
+  "#78A2BF",
+  "#8DB37A",
+  "#C49A65",
+  "#C17373",
+  "#7A8CC7",
+  "#6FB3A5",
+  "#A77AB8",
+  "#D08E62",
+  "#90A96D",
+];
+
 const TOXIC_GROUP_LABELS = {
   "Cosmético_higiene pessoal": "Cosmético e higiene pessoal",
+  "Agrotóxico uso agrícola": "Agrotóxico agrícola",
+  "Prod. uso domiciliar": "Uso domiciliar",
+  "Agrotóxico uso doméstico": "Agrotóxico doméstico",
+  "Prod. químico uso industrial": "Químico industrial",
+  "Prod. uso veterinário": "Uso veterinário",
+  "Drogas de abuso": "Drogas abuso",
 };
 
 const CHART_CONFIG = {
@@ -369,29 +388,68 @@ function renderPieChart(elementId, rows, title, sexFilter) {
       state,
       total: sum(stateRows.map((row) => row.total_year)),
     }))
+    .filter((item) => item.total > 0)
     .sort((left, right) => right.total - left.total);
+
+  const totalCases = sum(grouped.map((item) => item.total));
+  const pieColors = grouped.map((item, index) => PIE_PALETTE[index % PIE_PALETTE.length]);
 
   Plotly.react(
     document.getElementById(elementId),
     [
       {
         type: "pie",
+        hole: 0.7,
         labels: grouped.map((item) => item.state),
         values: grouped.map((item) => item.total),
         sort: false,
+        direction: "clockwise",
+        rotation: 120,
+        textinfo: "none",
+        showlegend: true,
         marker: {
-          colors: grouped.map((item) => STATE_COLORS[item.state] || "#86A7B5"),
-          line: { color: "#FFFFFF", width: 1.5 },
+          colors: pieColors,
+          line: { color: "rgba(255, 255, 255, 0.95)", width: 2.5 },
         },
-        textinfo: "label+percent",
-        hovertemplate: "%{label}<br>Casos: %{value:,.0f}<br>Participacao: %{percent}<extra></extra>",
+        hovertemplate:
+          "<b>%{label}</b><br>Casos: %{value:,.0f}<br>Participação: %{percent}<extra></extra>",
+        hoverlabel: {
+          bgcolor: "#FFFFFF",
+          bordercolor: "rgba(15, 63, 73, 0.15)",
+          font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', color: "#16313A", size: 13 },
+        },
       },
     ],
     {
       ...PLOT_LAYOUT_BASE,
-      title: { text: title, x: 0.02, xanchor: "left", font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 18 } },
-      margin: { t: 54, r: 10, b: 10, l: 10 },
-      showlegend: false,
+      title: {
+        text: title,
+        x: 0.02,
+        xanchor: "left",
+        font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 16 },
+      },
+      margin: { t: 52, r: 14, b: 92, l: 14 },
+      legend: {
+        orientation: "h",
+        x: 0.5,
+        xanchor: "center",
+        y: -0.14,
+        yanchor: "top",
+        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#5d7880" },
+        itemwidth: 78,
+        itemsizing: "constant",
+      },
+      annotations: [
+        {
+          text: `<span style="font-size: 28px; font-weight: 700; color: #16313A;">${formatInteger(totalCases)}</span><br><span style="font-size: 12px; color: #5d7880; letter-spacing: 0.06em; text-transform: uppercase;">casos</span>`,
+          showarrow: false,
+          x: 0.5,
+          y: 0.5,
+          font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 18, color: "#16313A" },
+          align: "center",
+        },
+      ],
+      uniformtext: { minsize: 10, mode: "hide" },
     },
     CHART_CONFIG
   );
@@ -443,11 +501,17 @@ function renderToxicChart(rows) {
     traces,
     {
       ...PLOT_LAYOUT_BASE,
-      margin: { t: 30, r: 20, b: 50, l: 180 },
+      margin: { t: 30, r: 20, b: 56, l: 260 },
       barmode: selectedSex === "Todos" ? "group" : "relative",
-      xaxis: { title: "Notificações" },
-      yaxis: { title: "" },
-      legend: { orientation: "h", y: 1.12 },
+      xaxis: { title: "Notificações", automargin: true },
+      yaxis: {
+        title: "",
+        automargin: true,
+        tickpadding: 18,
+        ticklabelstandoff: 16,
+        tickfont: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#16313A" },
+      },
+      legend: { orientation: "h", y: 1.12, x: 0.02, xanchor: "left" },
     },
     CHART_CONFIG
   );
@@ -493,15 +557,16 @@ function renderDetailChart(rows) {
     traces,
     {
       ...PLOT_LAYOUT_BASE,
-      title: {
-        text: detailState ? formatStateLabel(detailState) : "Estado",
-        x: 0.02,
-        xanchor: "left",
-        font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 18 },
-      },
+      margin: { t: 54, r: 20, b: 50, l: 55 },
       xaxis: { title: "Ano", tickmode: "linear" },
       yaxis: { title: "Notificações" },
-      legend: { orientation: "h", y: 1.14 },
+      legend: {
+        orientation: "h",
+        x: 0.02,
+        y: 1.12,
+        xanchor: "left",
+        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 12, color: "#5d7880" },
+      },
     },
     CHART_CONFIG
   );

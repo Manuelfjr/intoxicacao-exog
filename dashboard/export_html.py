@@ -42,11 +42,11 @@ def main() -> None:
             "",
         )
         .replace(
-        '<link rel="stylesheet" href="./styles.css" />',
+        '<link rel="stylesheet" href="./styles.css?v=20260704" />',
         f"<style>\n{css_text}\n</style>",
     )
         .replace(
-            '<script src="./assets/plotly.min.js"></script>\n    <script src="./app.js"></script>',
+            '<script src="./assets/plotly.min.js"></script>\n    <script src="./app.js?v=20260704"></script>',
             f"    <script>\n{plotly_text}\n</script>\n"
             f"    <script>\nwindow.__DASHBOARD_DATA__ = {json_text};\n</script>\n"
             f"    <script>\n{js_text}\n</script>",

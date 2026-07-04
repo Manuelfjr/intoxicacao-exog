@@ -94,6 +94,35 @@ def find_available_port(host: str, preferred_port: int, max_attempts: int = 20) 
     )
 
 
+class DashboardRequestHandler(SimpleHTTPRequestHandler):
+    """Serve the dashboard and ignore browser noise requests."""
+
+    def do_GET(self) -> None:
+        if self.path in {
+            "/favicon.ico",
+            "/.well-known/appspecific/com.chrome.devtools.json",
+        }:
+            self.send_response(204)
+            self.end_headers()
+            return
+
+        super().do_GET()
+
+    def log_message(self, format: str, *args: object) -> None:
+        if self.path in {
+            "/favicon.ico",
+            "/.well-known/appspecific/com.chrome.devtools.json",
+        }:
+            return
+
+        super().log_message(format, *args)
+
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.send_header("Pragma", "no-cache")
+        super().end_headers()
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     dashboard_dir = root / "dashboard"
@@ -104,7 +133,7 @@ def main() -> None:
     requested_port = int(os.environ.get("PORT", "8765"))
     port = find_available_port(host, requested_port)
 
-    handler = partial(SimpleHTTPRequestHandler, directory=str(dashboard_dir))
+    handler = partial(DashboardRequestHandler, directory=str(dashboard_dir))
     server = ThreadingHTTPServer((host, port), handler)
 
     print(f"Dashboard data: {payload_path}")

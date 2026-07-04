@@ -455,7 +455,7 @@ body::after {
 
 .plot {
   min-height: 340px;
-  padding: 0 10px 12px;
+  padding: 0 12px 16px;
 }
 
 .plot-lg {
@@ -463,14 +463,14 @@ body::after {
 }
 
 .plot-md {
-  min-height: 360px;
+  min-height: 450px;
 }
 
 .pie-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  padding: 0 10px 12px;
+  gap: 16px;
+  padding: 2px 12px 8px;
 }
 
 .table-wrapper {
@@ -618,6 +618,6 @@ body::after {
   .plot,
   .plot-lg,
   .plot-md {
-    min-height: 320px;
+    min-height: 360px;
   }
 }
