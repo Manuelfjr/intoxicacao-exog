@@ -1,37 +1,54 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard de Intoxicação Exógena em Idosos</title>
-    <link rel="icon" href="./favicon.svg?v=20260704" type="image/svg+xml" />
-    <link rel="shortcut icon" href="./favicon.svg?v=20260704" />
+    <link rel="icon" href="./favicon.svg?v=20261011" type="image/svg+xml" />
+    <link rel="shortcut icon" href="./favicon.svg?v=20261011" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260704" />
+    <link rel="stylesheet" href="./styles.css?v=20261011" />
   </head>
   <body>
+    <canvas class="bg-canvas" id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="bg-glow" id="bg-glow" aria-hidden="true"></div>
     <div class="app-shell">
-      <header class="hero">
+      <header class="hero panel">
         <div class="hero-copy">
-          <p class="eyebrow">Vigilância em Saúde</p>
+          <p class="eyebrow">Vigilância em Saúde · Pessoas idosas</p>
           <h1>Intoxicação exógena em idosos</h1>
           <p class="hero-text">
-            Dashboard interativo sobre notificações de tentativa de suicídio por intoxicação exógena,
-            com leitura por sexo, estado e comportamento anual.
+            Notificações de tentativa de suicídio por intoxicação exógena na população idosa, com leitura por sexo,
+            estado e comportamento anual.
           </p>
-        </div>
-        <div class="hero-side">
+          <dl class="hero-facts">
+            <div>
+              <dt>Notificações</dt>
+              <dd id="hero-total">-</dd>
+            </div>
+            <div>
+              <dt>Mulheres</dt>
+              <dd id="hero-female">-</dd>
+            </div>
+            <div>
+              <dt>Agente líder</dt>
+              <dd id="hero-agent">-</dd>
+            </div>
+          </dl>
           <div class="hero-meta">
-            <div class="meta-chip" id="meta-period">Período</div>
-            <div class="meta-chip" id="meta-generated">Atualização</div>
+            <span class="meta-chip" id="meta-period">Período</span>
+            <span class="meta-chip" id="meta-states">Estados</span>
+            <span class="meta-chip meta-chip--muted" id="meta-generated">Atualização</span>
           </div>
-          <div class="hero-visual" aria-hidden="true">
-            <div class="hero-visual-shell">
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-visual-shell">
               <svg class="hero-illustration" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="heroSurface" x1="84" y1="52" x2="530" y2="336" gradientUnits="userSpaceOnUse">
@@ -80,107 +97,69 @@
                 <rect x="350" y="276" width="120" height="30" rx="15" fill="#F3FBFA" />
                 <rect x="350" y="276" width="74" height="30" rx="15" fill="#BEECE5" />
               </svg>
-            </div>
+          </div>
 
-            <div class="hero-floating-card hero-floating-card--top">
-              <span class="floating-kicker">Sinal observado</span>
-              <strong>Ritmo estável</strong>
-              <svg class="floating-spark" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 24L26 19L44 22L61 11L79 15L98 7L114 14" stroke="#159688" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                <circle cx="61" cy="11" r="3.5" fill="#FFFFFF" stroke="#159688" stroke-width="2.4" />
-                <circle cx="98" cy="7" r="3.5" fill="#FFFFFF" stroke="#159688" stroke-width="2.4" />
-              </svg>
-            </div>
+          <div class="hero-floating-card hero-floating-card--top">
+            <span class="floating-kicker">Sinal observado</span>
+            <strong id="hero-signal">-</strong>
+            <svg class="floating-spark" id="hero-signal-spark" viewBox="0 0 120 36" preserveAspectRatio="none"></svg>
+            <p id="hero-signal-note"></p>
+          </div>
 
-            <div class="hero-floating-card hero-floating-card--bottom">
-              <span class="floating-kicker">Leitura integrada</span>
-              <strong>Sexo, estado e ano</strong>
-              <p>Recortes limpos para análise rápida.</p>
-            </div>
+          <div class="hero-floating-card hero-floating-card--bottom">
+            <span class="floating-kicker">Leitura integrada</span>
+            <strong>Sexo, estado e ano</strong>
+            <p>Recortes sincronizados em todos os gráficos.</p>
           </div>
         </div>
+
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Alternar tema claro e escuro">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg>
+        </button>
       </header>
 
-      <section class="toolbar panel">
+      <section class="toolbar panel" aria-label="Filtros">
         <div class="toolbar-block">
           <span class="toolbar-label">Sexo</span>
-          <div class="segmented-control" id="sex-filter"></div>
+          <div class="segmented-control" id="sex-filter" role="group" aria-label="Filtro por sexo"></div>
         </div>
         <div class="toolbar-block toolbar-block--states">
           <span class="toolbar-label">Estados</span>
-          <div class="state-chip-group" id="state-filter"></div>
+          <div class="state-chip-group" id="state-filter" role="group" aria-label="Filtro por estado"></div>
         </div>
-        <button class="reset-button" id="reset-filters" type="button">Limpar filtros</button>
+        <div class="toolbar-side">
+          <p class="toolbar-summary" id="filter-summary-text"></p>
+          <button class="reset-button" id="reset-filters" type="button">Limpar filtros</button>
+        </div>
       </section>
 
-      <section class="filter-summary panel">
-        <div>
-          <p class="panel-kicker">Recorte ativo</p>
-          <h2 id="filter-summary-title">Todos os estados e sexos</h2>
-        </div>
-        <p class="filter-summary-text" id="filter-summary-text"></p>
-      </section>
-
-      <section class="metric-grid">
+      <section class="metric-grid" aria-label="Indicadores do recorte">
         <article class="metric-card panel">
           <span class="metric-label">Casos no recorte</span>
           <strong class="metric-value" id="metric-total">-</strong>
           <span class="metric-note" id="metric-total-note"></span>
         </article>
         <article class="metric-card panel">
-          <span class="metric-label">Último ano do recorte</span>
+          <span class="metric-label" id="metric-latest-label">Último ano</span>
           <strong class="metric-value" id="metric-latest">-</strong>
           <span class="metric-note" id="metric-latest-note"></span>
+        </article>
+        <article class="metric-card panel">
+          <span class="metric-label" id="metric-share-label">Participação feminina</span>
+          <strong class="metric-value" id="metric-share">-</strong>
+          <span class="metric-note" id="metric-share-note"></span>
         </article>
         <article class="metric-card panel">
           <span class="metric-label">Estado líder</span>
           <strong class="metric-value" id="metric-state">-</strong>
           <span class="metric-note" id="metric-state-note"></span>
         </article>
-        <article class="metric-card panel">
-          <span class="metric-label">Anos com notificação</span>
-          <strong class="metric-value" id="metric-active-years">-</strong>
-          <span class="metric-note" id="metric-active-years-note"></span>
-        </article>
-      </section>
-
-      <section class="panel agent-summary">
-        <div class="panel-header">
-          <div>
-            <p class="panel-kicker">Resumo</p>
-            <h2>Leitura analítica do recorte</h2>
-            <p class="panel-note">
-              Síntese preparada a partir de <code>agents/data_scientist_agent.md</code> para orientar a leitura dos gráficos.
-            </p>
-          </div>
-        </div>
-        <div class="agent-summary-grid">
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">10.400</span>
-            <span class="agent-summary-label">notificações no recorte</span>
-            <p class="agent-summary-text">Total acumulado entre 2007 e 2025 nos cinco estados analisados.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">64,5%</span>
-            <span class="agent-summary-label">predomínio feminino</span>
-            <p class="agent-summary-text">Mulheres concentram a maior parte das notificações no conjunto avaliado.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">72,9%</span>
-            <span class="agent-summary-label">São Paulo</span>
-            <p class="agent-summary-text">O estado lidera de forma muito dominante e influencia fortemente o agregado.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">2025</span>
-            <span class="agent-summary-label">pico da série</span>
-            <p class="agent-summary-text">O último ano do recorte concentra o maior volume observado em ambos os sexos.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">Medicamento</span>
-            <span class="agent-summary-label">agente líder</span>
-            <p class="agent-summary-text">O principal grupo tóxico do painel, com destaque absoluto sobre os demais.</p>
-          </article>
-        </div>
       </section>
 
       <section class="dashboard-grid">
@@ -189,6 +168,7 @@
             <div>
               <p class="panel-kicker">Tendência</p>
               <h2>Série anual do recorte</h2>
+              <p class="panel-note" id="trend-note"></p>
             </div>
           </div>
           <div class="plot plot-lg" id="trend-chart"></div>
@@ -197,47 +177,61 @@
         <article class="panel panel-span-4">
           <div class="panel-header">
             <div>
-              <p class="panel-kicker">Mapa temporal</p>
-              <h2>Intensidade por estado e ano</h2>
+              <p class="panel-kicker">Composição</p>
+              <h2>Participação feminina por ano</h2>
+              <p class="panel-note" id="share-note"></p>
             </div>
           </div>
-          <div class="plot plot-lg" id="heatmap-chart"></div>
+          <div class="plot plot-lg" id="share-chart"></div>
         </article>
 
-        <article class="panel panel-span-12">
+        <article class="panel panel-span-12 panel-heat">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Mapa temporal</p>
+              <h2>Intensidade por estado e ano</h2>
+              <p class="panel-note" id="heatmap-note"></p>
+            </div>
+            <div class="segmented-control segmented-control--sm" id="heatmap-mode" role="group" aria-label="Escala do mapa"></div>
+          </div>
+          <div class="plot plot-heat" id="heatmap-chart"></div>
+        </article>
+
+        <article class="panel panel-span-12 panel-multiples">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Estados lado a lado</p>
+              <h2>Série por estado, cada um na própria escala</h2>
+              <p class="panel-note">
+                São Paulo concentra a maior parte dos casos e domina o agregado. Aqui cada estado tem eixo próprio, para que
+                a forma da série de estados menores fique visível.
+              </p>
+            </div>
+          </div>
+          <div class="plot plot-multiples" id="multiples-chart"></div>
+        </article>
+
+        <article class="panel panel-span-6">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">Participação territorial</p>
-              <h2>Distribuição proporcional de casos por estado</h2>
-              <p class="panel-note" id="pie-note"></p>
+              <h2>Casos acumulados por estado</h2>
+              <p class="panel-note" id="states-note"></p>
             </div>
           </div>
-          <div class="pie-grid">
-            <div class="plot plot-md" id="pie-total-chart"></div>
-            <div class="plot plot-md" id="pie-feminino-chart"></div>
-            <div class="plot plot-md" id="pie-masculino-chart"></div>
-          </div>
+          <div class="plot plot-lg" id="states-chart"></div>
         </article>
 
         <article class="panel panel-span-6">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">Perfil tóxico</p>
-              <h2>Grupos de agentes com maior volume</h2>
+              <h2>Grupos de agentes</h2>
+              <p class="panel-note" id="toxic-note"></p>
             </div>
+            <div class="segmented-control segmented-control--sm" id="toxic-mode" role="group" aria-label="Escala do perfil tóxico"></div>
           </div>
           <div class="plot plot-lg" id="toxic-chart"></div>
-        </article>
-
-        <article class="panel panel-span-6">
-          <div class="panel-header">
-            <div>
-              <p class="panel-kicker">Estado líder do recorte</p>
-              <h2>Comparação anual por sexo</h2>
-              <p class="panel-note" id="detail-note"></p>
-            </div>
-          </div>
-          <div class="plot plot-lg" id="detail-chart"></div>
         </article>
 
         <article class="panel panel-span-7">
@@ -263,15 +257,19 @@
             <div>
               <p class="panel-kicker">Leitura rápida</p>
               <h2>Principais achados</h2>
-              <p class="panel-note" id="insight-note"></p>
+              <p class="panel-note">Os destaques acompanham o recorte ativo de sexo e estados.</p>
             </div>
           </div>
           <ul class="insight-list" id="insight-list"></ul>
         </article>
       </section>
+
+      <footer class="footnote">
+        Fonte: notificações de intoxicação exógena (dados CFF). Anos sem notificação registrada aparecem como zero.
+      </footer>
     </div>
 
     <script src="./assets/plotly.min.js"></script>
-    <script src="./app.js?v=20260704"></script>
+    <script src="./app.js?v=20261011"></script>
   </body>
 </html>

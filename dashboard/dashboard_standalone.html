@@ -1,35 +1,114 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard de Intoxicação Exógena em Idosos</title>
-    <link rel="icon" href="./favicon.svg?v=20260704" type="image/svg+xml" />
-    <link rel="shortcut icon" href="./favicon.svg?v=20260704" />
+    <link rel="icon" href="./favicon.svg?v=20261011" type="image/svg+xml" />
+    <link rel="shortcut icon" href="./favicon.svg?v=20261011" />
     <style>
 :root {
+  color-scheme: light;
   --bg: #f6fbfc;
   --bg-alt: #edf5f5;
-  --panel: rgba(255, 255, 255, 0.84);
-  --panel-strong: rgba(255, 255, 255, 0.96);
+  --bg-top: #fcfeff;
+  --glow-1: rgba(222, 237, 255, 0.78);
+  --glow-2: rgba(110, 224, 209, 0.24);
+  --glow-3: rgba(145, 227, 219, 0.18);
+  --stripe: rgba(19, 144, 130, 0.025);
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-solid: #ffffff;
+  --panel-inset: rgba(237, 245, 245, 0.7);
   --border: rgba(56, 108, 120, 0.12);
+  --border-strong: rgba(56, 108, 120, 0.22);
   --text: #16313a;
+  --text-soft: rgba(22, 49, 58, 0.8);
   --muted: #5d7880;
+  --faint: #8aa1a7;
+  --grid: rgba(56, 108, 120, 0.1);
+  --axis: rgba(56, 108, 120, 0.28);
   --accent: #139082;
   --accent-deep: #0d5768;
   --accent-soft: rgba(19, 144, 130, 0.12);
+  --female: #d95926;
+  --male: #2a78d6;
+  --title: #102f48;
+  --hero-a: rgba(255, 255, 255, 0.97);
+  --hero-b: rgba(255, 255, 255, 0.94);
+  --hero-c: rgba(242, 251, 250, 0.9);
+  --hero-stripe: rgba(255, 255, 255, 0.18);
+  --hero-halo: 0.82;
+  --float: rgba(255, 255, 255, 0.84);
+  --accent-soft-strong: rgba(19, 144, 130, 0.3);
+  --dot: 19, 144, 130;
+  --cursor-glow: rgba(110, 224, 209, 0.22);
+  --heat-0: #f2f8f7;
+  --heat-1: #c9ebe4;
+  --heat-2: #8fd5c8;
+  --heat-3: #4fb5a5;
+  --heat-4: #1b8a7c;
+  --heat-5: #0f5f58;
+  --heat-6: #0a3f3c;
   --shadow: 0 26px 72px rgba(33, 74, 82, 0.1);
-  --shadow-soft: 0 18px 44px rgba(33, 74, 82, 0.08);
-  --male: #5b7fa3;
-  --female: #c06a6a;
+  --shadow-soft: 0 14px 36px rgba(33, 74, 82, 0.07);
   --radius-xl: 28px;
   --radius-lg: 22px;
   --radius-md: 16px;
   --radius-sm: 12px;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1a1d;
+  --bg-alt: #0a1416;
+  --bg-top: #102226;
+  --glow-1: rgba(42, 120, 214, 0.1);
+  --glow-2: rgba(19, 144, 130, 0.16);
+  --glow-3: rgba(19, 144, 130, 0.08);
+  --stripe: rgba(126, 226, 213, 0.025);
+  --panel: rgba(20, 36, 40, 0.86);
+  --panel-solid: #142428;
+  --panel-inset: rgba(255, 255, 255, 0.04);
+  --border: rgba(159, 214, 210, 0.1);
+  --border-strong: rgba(159, 214, 210, 0.2);
+  --text: #e6f1f0;
+  --text-soft: rgba(230, 241, 240, 0.82);
+  --muted: #98b0b2;
+  --faint: #6c8487;
+  --grid: rgba(159, 214, 210, 0.08);
+  --axis: rgba(159, 214, 210, 0.22);
+  --accent: #4fc4b3;
+  --accent-deep: #8fe0d3;
+  --accent-soft: rgba(79, 196, 179, 0.14);
+  --female: #e0703f;
+  --male: #4a90e6;
+  --title: #eaf6f4;
+  --hero-a: rgba(18, 34, 38, 0.96);
+  --hero-b: rgba(18, 34, 38, 0.92);
+  --hero-c: rgba(16, 44, 46, 0.9);
+  --hero-stripe: rgba(255, 255, 255, 0.025);
+  --hero-halo: 0.25;
+  --float: rgba(22, 40, 44, 0.86);
+  --accent-soft-strong: rgba(79, 196, 179, 0.35);
+  --dot: 110, 214, 199;
+  --cursor-glow: rgba(79, 196, 179, 0.12);
+  --heat-0: #17292c;
+  --heat-1: #12403d;
+  --heat-2: #155a53;
+  --heat-3: #1b7a6d;
+  --heat-4: #2fa08f;
+  --heat-5: #66c9b8;
+  --heat-6: #b3ece2;
+  --shadow: 0 26px 72px rgba(0, 0, 0, 0.35);
+  --shadow-soft: 0 14px 36px rgba(0, 0, 0, 0.25);
+}
+
 * {
   box-sizing: border-box;
+}
+
+html {
+  font-size: clamp(15px, 0.3vw + 11px, 19px);
 }
 
 body {
@@ -39,88 +118,89 @@ body {
   font-family: "Source Sans 3", "Trebuchet MS", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at 14% 10%, rgba(222, 237, 255, 0.78), transparent 26%),
-    radial-gradient(circle at 82% 12%, rgba(110, 224, 209, 0.24), transparent 18%),
-    radial-gradient(circle at 74% 22%, rgba(145, 227, 219, 0.18), transparent 24%),
-    linear-gradient(180deg, #fcfeff 0%, var(--bg) 22%, var(--bg-alt) 100%);
+    radial-gradient(circle at 14% 10%, var(--glow-1), transparent 26%),
+    radial-gradient(circle at 82% 12%, var(--glow-2), transparent 18%),
+    radial-gradient(circle at 74% 22%, var(--glow-3), transparent 24%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 22%, var(--bg-alt) 100%);
+  background-attachment: fixed;
   overflow-x: hidden;
+  transition: background-color 240ms ease, color 240ms ease;
 }
 
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-}
-
-body::before {
-  z-index: 0;
-  background:
-    linear-gradient(90deg, transparent 0%, transparent 56%, rgba(171, 238, 230, 0.16) 68%, transparent 100%),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 120px,
-      rgba(19, 144, 130, 0.025) 120px,
-      rgba(19, 144, 130, 0.025) 121px
-    );
-  opacity: 0.85;
-}
-
-body::after {
-  z-index: 0;
-  left: auto;
-  top: 80px;
-  right: -180px;
-  bottom: auto;
-  width: 620px;
-  height: 620px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(83, 214, 197, 0.28) 0%, rgba(83, 214, 197, 0.12) 34%, transparent 72%);
-  filter: blur(24px);
-}
 
 .app-shell {
   position: relative;
   z-index: 1;
-  max-width: 1520px;
+  max-width: 2400px;
   margin: 0 auto;
-  padding: 32px 24px 48px;
+  padding: clamp(16px, 2vw, 40px) clamp(16px, 3vw, 72px) 40px;
 }
 
-.app-shell::before {
-  content: "";
-  position: absolute;
-  top: 88px;
-  right: 12px;
-  width: min(42vw, 620px);
-  height: 430px;
-  border-radius: 40px;
-  background:
-    radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.7), transparent 22%),
-    linear-gradient(180deg, rgba(146, 237, 228, 0.22), rgba(146, 237, 228, 0.02)),
-    linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.26));
-  filter: blur(6px);
-  pointer-events: none;
+/* ---------- Panels ---------- */
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(12px);
 }
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 22px 24px 6px;
+}
+
+.panel-header h2 {
+  margin: 4px 0 0;
+  font-family: "Sora", "Trebuchet MS", sans-serif;
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow,
+.panel-kicker,
+.toolbar-label,
+.metric-label {
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.panel-kicker,
+.eyebrow {
+  color: var(--accent);
+}
+
+.panel-note {
+  max-width: 68ch;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+/* ---------- Hero ---------- */
 
 .hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.85fr);
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 56px);
   align-items: center;
-  min-height: 320px;
-  padding: 38px 40px;
+  min-height: clamp(320px, 30vw, 520px);
+  padding: clamp(28px, 3vw, 56px) clamp(24px, 3.4vw, 64px);
   border-radius: var(--radius-xl);
   background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.95) 42%, rgba(242, 251, 250, 0.9) 100%),
-    linear-gradient(135deg, rgba(220, 246, 242, 0.36), transparent);
-  border: 1px solid rgba(110, 194, 190, 0.14);
-  color: var(--text);
+    linear-gradient(120deg, var(--hero-a) 0%, var(--hero-b) 42%, var(--hero-c) 100%);
   box-shadow: var(--shadow);
 }
 
@@ -137,93 +217,110 @@ body::after {
       90deg,
       rgba(255, 255, 255, 0) 0,
       rgba(255, 255, 255, 0) 26px,
-      rgba(255, 255, 255, 0.18) 26px,
-      rgba(255, 255, 255, 0.18) 28px,
+      var(--hero-stripe) 26px,
+      var(--hero-stripe) 28px,
       rgba(255, 255, 255, 0) 28px,
       rgba(255, 255, 255, 0) 62px
     );
+  pointer-events: none;
 }
 
 .hero::after {
   content: "";
   position: absolute;
   top: 26px;
-  right: 70px;
-  width: 320px;
-  height: 320px;
+  right: 8%;
+  width: clamp(220px, 22vw, 420px);
+  aspect-ratio: 1;
   border-radius: 40px;
   background:
-    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.58), transparent 40%),
+    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.5), transparent 40%),
     linear-gradient(180deg, rgba(19, 144, 130, 0.18), rgba(255, 255, 255, 0));
-  opacity: 0.82;
+  opacity: var(--hero-halo);
   filter: blur(14px);
   transform: rotate(-8deg);
   z-index: -1;
-}
-
-.hero-copy,
-.hero-meta {
-  position: relative;
-  z-index: 1;
+  pointer-events: none;
 }
 
 .hero-copy {
-  max-width: 700px;
-}
-
-.hero-side {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  align-items: flex-end;
+  max-width: 760px;
 }
 
 .hero-copy h1 {
-  margin: 8px 0 10px;
+  margin: 10px 0 14px;
   font-family: "Sora", "Trebuchet MS", sans-serif;
-  font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 1.1;
-  color: #102f48;
-}
-
-.eyebrow,
-.panel-kicker,
-.toolbar-label,
-.metric-label {
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.eyebrow {
-  color: var(--accent);
+  font-size: clamp(2rem, 3.2vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--title);
 }
 
 .hero-text {
-  max-width: 720px;
+  max-width: 60ch;
   margin: 0;
-  font-size: 1.03rem;
-  line-height: 1.65;
-  color: rgba(22, 49, 58, 0.8);
+  font-size: 1.06rem;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px clamp(20px, 2.4vw, 40px);
+  margin: 24px 0 0;
+}
+
+.hero-facts div {
+  padding-left: 14px;
+  border-left: 2px solid var(--accent-soft-strong);
+}
+
+.hero-facts dt {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-facts dd {
+  margin: 4px 0 0;
+  font-family: "Sora", "Trebuchet MS", sans-serif;
+  font-size: clamp(1.3rem, 1.6vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .hero-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  align-content: flex-start;
-  justify-content: flex-end;
-  width: min(320px, 100%);
-  margin-left: auto;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.meta-chip {
+  padding: 7px 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--panel-inset);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent-deep);
+}
+
+.meta-chip--muted {
+  color: var(--muted);
+  font-weight: 500;
 }
 
 .hero-visual {
   position: relative;
-  width: min(100%, 580px);
-  min-height: 320px;
-  padding: 12px 34px 18px 18px;
+  justify-self: end;
+  width: min(100%, 860px);
+  padding: 12px 40px 22px 10px;
 }
 
 .hero-visual-shell {
@@ -235,6 +332,7 @@ body::after {
   border: 1px solid rgba(120, 211, 200, 0.18);
   box-shadow: 0 24px 48px rgba(21, 108, 103, 0.08);
   backdrop-filter: blur(8px);
+  transition: transform 400ms ease;
 }
 
 .hero-illustration {
@@ -243,49 +341,61 @@ body::after {
   height: auto;
 }
 
+:root[data-theme="dark"] .hero-visual-shell {
+  filter: invert(0.9) hue-rotate(180deg) saturate(1.2);
+  opacity: 0.9;
+}
+
 .hero-floating-card {
   position: absolute;
   min-width: 172px;
   padding: 14px 16px;
   border-radius: 22px;
-  border: 1px solid rgba(70, 166, 157, 0.12);
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 20px 44px rgba(26, 91, 100, 0.1);
+  border: 1px solid var(--border);
+  background: var(--float);
+  box-shadow: 0 20px 44px rgba(26, 91, 100, 0.12);
   backdrop-filter: blur(12px);
+  animation: float 7s ease-in-out infinite;
 }
 
 .hero-floating-card strong {
   display: block;
   margin-top: 6px;
-  color: #123848;
   font-family: "Sora", "Trebuchet MS", sans-serif;
-  font-size: 1rem;
+  font-size: 1.02rem;
   line-height: 1.3;
+  color: var(--title);
 }
 
 .hero-floating-card p {
   margin: 6px 0 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.4;
 }
 
 .hero-floating-card--top {
-  top: 26px;
-  right: -4px;
-  width: 200px;
+  top: 20px;
+  right: 0;
+  width: clamp(190px, 15vw, 240px);
 }
 
 .hero-floating-card--bottom {
-  right: 10px;
-  bottom: 8px;
-  width: 220px;
+  right: 14px;
+  bottom: 4px;
+  width: clamp(200px, 16vw, 250px);
+  animation-delay: -3.5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 .floating-kicker {
   display: block;
   color: var(--accent);
-  font-size: 0.73rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -294,195 +404,290 @@ body::after {
 .floating-spark {
   display: block;
   width: 100%;
-  height: 44px;
+  height: 40px;
   margin-top: 10px;
+  overflow: visible;
 }
 
-.meta-chip {
-  min-width: 180px;
-  padding: 12px 14px;
-  border: 1px solid rgba(19, 144, 130, 0.16);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: var(--shadow-soft);
-  font-size: 0.92rem;
+.theme-toggle {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--panel-solid);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
 }
 
-.panel {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)),
-    var(--panel);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(12px);
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-sun,
+:root[data-theme="dark"] .icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .icon-sun {
+  display: block;
+}
+
+/* ---------- Background ---------- */
+
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 720px;
+  height: 720px;
+  margin: -360px 0 0 -360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cursor-glow) 0%, transparent 62%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+  will-change: transform;
+}
+
+.bg-glow.is-visible {
+  opacity: 1;
+}
+
+/* ---------- Toolbar ---------- */
 
 .toolbar {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
   display: grid;
-  grid-template-columns: 220px 1fr auto;
-  gap: 18px;
-  align-items: center;
-  padding: 22px 24px;
-  margin-top: 24px;
-}
-
-.filter-summary {
-  display: flex;
-  justify-content: space-between;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 24px;
-  align-items: center;
-  padding: 18px 24px;
-  margin-top: 16px;
-}
-
-.filter-summary h2 {
-  margin: 6px 0 0;
-  font-family: "Sora", "Trebuchet MS", sans-serif;
-  font-size: 1.05rem;
-}
-
-.filter-summary-text,
-.panel-note {
-  margin: 6px 0 0;
-  color: var(--muted);
-  font-size: 0.94rem;
-  line-height: 1.45;
+  align-items: end;
+  padding: 16px 22px;
+  margin-top: 18px;
+  background: var(--panel-solid);
 }
 
 .toolbar-block {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.segmented-control,
+.toolbar-label {
+  color: var(--muted);
+}
+
+.toolbar-side {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-summary {
+  margin: 0;
+  max-width: 260px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.toolbar-summary strong {
+  color: var(--text);
+}
+
+.segmented-control {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel-inset);
+}
+
 .state-chip-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .chip,
 .segmented-button,
 .reset-button {
   appearance: none;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.84);
+  font-family: inherit;
   color: var(--text);
   cursor: pointer;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
-.segmented-button,
-.reset-button {
-  padding: 10px 16px;
-  font-size: 0.95rem;
+.segmented-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 15px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.93rem;
   font-weight: 600;
+  color: var(--muted);
+}
+
+.segmented-button:hover {
+  color: var(--text);
+}
+
+.segmented-button.is-active {
+  background: var(--panel-solid);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(22, 49, 58, 0.14), 0 0 0 1px var(--border);
+}
+
+.segmented-control--sm .segmented-button {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
 }
 
 .chip {
-  padding: 10px 14px;
-  font-size: 0.94rem;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.92rem;
   font-weight: 600;
+  color: var(--muted);
 }
 
-.chip:hover,
-.segmented-button:hover,
-.reset-button:hover {
-  transform: translateY(-1px);
-  border-color: rgba(47, 111, 123, 0.35);
+.chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
 }
 
-.chip.is-active,
-.segmented-button.is-active {
+.chip.is-active {
   background: var(--accent-soft);
-  border-color: rgba(19, 144, 130, 0.34);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   color: var(--accent-deep);
 }
 
+.chip:focus-visible,
+.segmented-button:focus-visible,
+.reset-button:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .reset-button {
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
   background: linear-gradient(135deg, #11796f, #16998a);
   color: #f7fbfc;
-  box-shadow: 0 16px 32px rgba(19, 144, 130, 0.18);
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(19, 144, 130, 0.2);
 }
+
+.reset-button:hover {
+  box-shadow: 0 12px 28px rgba(19, 144, 130, 0.3);
+}
+
+/* ---------- Metrics ---------- */
 
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 24px;
+  gap: 16px;
+  margin-top: 18px;
 }
 
 .metric-card {
-  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 22px 20px;
+}
+
+.metric-label {
+  color: var(--muted);
 }
 
 .metric-value {
-  display: block;
   margin-top: 10px;
   font-family: "Sora", "Trebuchet MS", sans-serif;
-  font-size: 2.2rem;
-  line-height: 1;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
 .metric-note {
-  display: block;
-  margin-top: 12px;
+  margin-top: 8px;
   color: var(--muted);
-  font-size: 0.95rem;
-}
-
-.agent-summary {
-  margin-top: 16px;
-  padding-bottom: 8px;
-}
-
-.agent-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
-  padding: 0 22px 22px;
-}
-
-.agent-summary-card {
-  padding: 18px 16px 16px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(246, 251, 252, 0.96), rgba(237, 245, 245, 0.92));
-  border: 1px solid rgba(56, 108, 120, 0.1);
-}
-
-.agent-summary-value {
-  display: block;
-  font-family: "Sora", "Trebuchet MS", sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--accent-deep);
-}
-
-.agent-summary-label {
-  display: block;
-  margin-top: 6px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.agent-summary-text {
-  margin: 10px 0 0;
-  color: rgba(22, 49, 58, 0.82);
   font-size: 0.92rem;
-  line-height: 1.5;
 }
+
+.delta {
+  font-weight: 700;
+}
+
+.delta--up {
+  color: #b5481d;
+}
+
+.delta--down {
+  color: var(--accent);
+}
+
+:root[data-theme="dark"] .delta--up {
+  color: #f08a5d;
+}
+
+/* ---------- Grid ---------- */
 
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 24px;
+  gap: 16px;
+  margin-top: 18px;
 }
 
 .panel-span-12 { grid-column: span 12; }
@@ -492,133 +697,191 @@ body::after {
 .panel-span-5 { grid-column: span 5; }
 .panel-span-4 { grid-column: span 4; }
 
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-start;
-  padding: 22px 22px 8px;
-}
-
-.panel-header h2 {
-  margin: 6px 0 0;
-  font-family: "Sora", "Trebuchet MS", sans-serif;
-  font-size: 1.18rem;
-}
-
 .plot {
-  min-height: 340px;
-  padding: 0 12px 16px;
-  width: min(100%, calc(100% - 28px));
-  margin: 0 auto;
+  min-height: 300px;
+  padding: 0 10px 12px;
 }
 
 .plot-lg {
-  min-height: 430px;
-  width: min(100%, calc(100% - 20px));
+  height: clamp(360px, 25vw, 640px);
 }
 
-.plot-md {
-  min-height: 450px;
-  width: min(100%, calc(100% - 20px));
+.plot-heat {
+  min-height: 300px;
 }
 
-.pie-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  padding: 2px 12px 8px;
+.plot-multiples {
+  min-height: 260px;
 }
 
-.pie-grid .plot {
-  width: 100%;
-}
+/* ---------- Table ---------- */
 
 .table-wrapper {
-  padding: 0 22px 22px;
+  padding: 4px 24px 22px;
   overflow-x: auto;
 }
 
 .state-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.97rem;
+  font-size: 0.96rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .state-table th,
 .state-table td {
-  padding: 14px 12px;
-  border-bottom: 1px solid rgba(39, 68, 76, 0.1);
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--grid);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.state-table th:first-child,
+.state-table td:first-child {
   text-align: left;
+  padding-left: 0;
 }
 
 .state-table th {
   color: var(--muted);
+  font-size: 0.78rem;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.state-table td:last-child,
-.state-table th:last-child {
-  text-align: right;
+.state-table td:first-child {
+  font-weight: 600;
 }
 
-.state-table td:nth-child(2),
-.state-table td:nth-child(3) {
-  text-align: right;
+.state-table tbody tr:last-child td {
+  border-bottom: 0;
 }
+
+.state-table tbody tr:hover td {
+  background: var(--panel-inset);
+}
+
+.share-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.share-bar {
+  width: 90px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--grid);
+}
+
+.share-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.split-bar {
+  display: flex;
+  gap: 2px;
+  width: 90px;
+  height: 8px;
+}
+
+.split-bar span {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* ---------- Insights ---------- */
 
 .insight-list {
+  display: grid;
+  gap: 10px;
   margin: 0;
-  padding: 0 26px 24px 42px;
-  color: var(--text);
+  padding: 8px 24px 24px;
+  list-style: none;
 }
 
 .insight-list li {
-  margin-bottom: 14px;
-  line-height: 1.5;
+  position: relative;
+  padding: 12px 14px 12px 40px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-inset);
+  line-height: 1.45;
+  color: var(--text-soft);
 }
 
-@media (max-width: 1200px) {
-  .app-shell::before {
-    width: min(50vw, 520px);
-    height: 340px;
-    top: 72px;
+.insight-list li::before {
+  content: counter(list-item);
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.insight-list strong {
+  color: var(--text);
+}
+
+.footnote {
+  margin-top: 22px;
+  color: var(--faint);
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (min-width: 2000px) {
+  .panel-heat {
+    grid-column: span 7;
   }
 
+  .panel-multiples {
+    grid-column: span 5;
+  }
+}
+
+@media (max-width: 1100px) {
   .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-side {
-    align-items: stretch;
-  }
-
-  .hero-meta {
-    width: 100%;
-    margin-left: 0;
-    justify-content: flex-start;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .hero-visual {
-    width: 100%;
-    max-width: 620px;
-    padding-right: 28px;
+    justify-self: center;
   }
+}
+
+@media (max-width: 1200px) {
 
   .toolbar {
+    position: static;
     grid-template-columns: 1fr;
+    align-items: start;
   }
 
-  .filter-summary {
-    flex-direction: column;
-    align-items: flex-start;
+  .toolbar-side {
+    justify-content: space-between;
+  }
+
+  .toolbar-summary {
+    max-width: none;
+    text-align: left;
   }
 
   .metric-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .agent-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -629,89 +892,118 @@ body::after {
   .panel-span-4 {
     grid-column: span 12;
   }
-
-  .pie-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 720px) {
-  body::before {
-    opacity: 0.4;
-  }
-
-  body::after,
-  .app-shell::before,
-  .hero::after {
-    display: none;
-  }
-
   .app-shell {
-    padding: 18px 16px 36px;
+    padding: 16px 16px 32px;
   }
 
   .hero {
-    padding: 24px 20px;
-    flex-direction: column;
-    min-height: auto;
-  }
-
-  .hero::before {
-    inset: 42% -20% -16% 18%;
-  }
-
-  .meta-chip {
-    min-width: 0;
+    padding: 26px 20px 22px;
   }
 
   .hero-visual {
-    min-height: 0;
-    padding: 8px 0 0;
+    padding: 4px 0 0;
   }
 
   .hero-floating-card {
     position: static;
     width: 100%;
-    min-width: 0;
     margin-top: 12px;
+    animation: none;
+  }
+
+  .hero::after {
+    display: none;
   }
 
   .metric-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
-  .agent-summary-grid {
-    grid-template-columns: 1fr;
-    padding: 0 18px 18px;
+  .metric-card {
+    padding: 14px 16px;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+  }
+
+  .hero-copy h1 {
+    padding-right: 36px;
+  }
+
+  .toolbar-side {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    padding: 18px 18px 4px;
+  }
+
+  .table-wrapper {
+    padding: 4px 18px 18px;
+  }
+
+  .insight-list {
+    padding: 8px 18px 18px;
   }
 
   .plot,
-  .plot-lg,
-  .plot-md {
-    min-height: 360px;
+  .plot-lg {
+    min-height: 340px;
+    padding: 0 4px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
 </style>
   </head>
   <body>
+    <canvas class="bg-canvas" id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="bg-glow" id="bg-glow" aria-hidden="true"></div>
     <div class="app-shell">
-      <header class="hero">
+      <header class="hero panel">
         <div class="hero-copy">
-          <p class="eyebrow">Vigilância em Saúde</p>
+          <p class="eyebrow">Vigilância em Saúde · Pessoas idosas</p>
           <h1>Intoxicação exógena em idosos</h1>
           <p class="hero-text">
-            Dashboard interativo sobre notificações de tentativa de suicídio por intoxicação exógena,
-            com leitura por sexo, estado e comportamento anual.
+            Notificações de tentativa de suicídio por intoxicação exógena na população idosa, com leitura por sexo,
+            estado e comportamento anual.
           </p>
-        </div>
-        <div class="hero-side">
+          <dl class="hero-facts">
+            <div>
+              <dt>Notificações</dt>
+              <dd id="hero-total">-</dd>
+            </div>
+            <div>
+              <dt>Mulheres</dt>
+              <dd id="hero-female">-</dd>
+            </div>
+            <div>
+              <dt>Agente líder</dt>
+              <dd id="hero-agent">-</dd>
+            </div>
+          </dl>
           <div class="hero-meta">
-            <div class="meta-chip" id="meta-period">Período</div>
-            <div class="meta-chip" id="meta-generated">Atualização</div>
+            <span class="meta-chip" id="meta-period">Período</span>
+            <span class="meta-chip" id="meta-states">Estados</span>
+            <span class="meta-chip meta-chip--muted" id="meta-generated">Atualização</span>
           </div>
-          <div class="hero-visual" aria-hidden="true">
-            <div class="hero-visual-shell">
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-visual-shell">
               <svg class="hero-illustration" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="heroSurface" x1="84" y1="52" x2="530" y2="336" gradientUnits="userSpaceOnUse">
@@ -760,107 +1052,69 @@ body::after {
                 <rect x="350" y="276" width="120" height="30" rx="15" fill="#F3FBFA" />
                 <rect x="350" y="276" width="74" height="30" rx="15" fill="#BEECE5" />
               </svg>
-            </div>
+          </div>
 
-            <div class="hero-floating-card hero-floating-card--top">
-              <span class="floating-kicker">Sinal observado</span>
-              <strong>Ritmo estável</strong>
-              <svg class="floating-spark" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 24L26 19L44 22L61 11L79 15L98 7L114 14" stroke="#159688" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                <circle cx="61" cy="11" r="3.5" fill="#FFFFFF" stroke="#159688" stroke-width="2.4" />
-                <circle cx="98" cy="7" r="3.5" fill="#FFFFFF" stroke="#159688" stroke-width="2.4" />
-              </svg>
-            </div>
+          <div class="hero-floating-card hero-floating-card--top">
+            <span class="floating-kicker">Sinal observado</span>
+            <strong id="hero-signal">-</strong>
+            <svg class="floating-spark" id="hero-signal-spark" viewBox="0 0 120 36" preserveAspectRatio="none"></svg>
+            <p id="hero-signal-note"></p>
+          </div>
 
-            <div class="hero-floating-card hero-floating-card--bottom">
-              <span class="floating-kicker">Leitura integrada</span>
-              <strong>Sexo, estado e ano</strong>
-              <p>Recortes limpos para análise rápida.</p>
-            </div>
+          <div class="hero-floating-card hero-floating-card--bottom">
+            <span class="floating-kicker">Leitura integrada</span>
+            <strong>Sexo, estado e ano</strong>
+            <p>Recortes sincronizados em todos os gráficos.</p>
           </div>
         </div>
+
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Alternar tema claro e escuro">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg>
+        </button>
       </header>
 
-      <section class="toolbar panel">
+      <section class="toolbar panel" aria-label="Filtros">
         <div class="toolbar-block">
           <span class="toolbar-label">Sexo</span>
-          <div class="segmented-control" id="sex-filter"></div>
+          <div class="segmented-control" id="sex-filter" role="group" aria-label="Filtro por sexo"></div>
         </div>
         <div class="toolbar-block toolbar-block--states">
           <span class="toolbar-label">Estados</span>
-          <div class="state-chip-group" id="state-filter"></div>
+          <div class="state-chip-group" id="state-filter" role="group" aria-label="Filtro por estado"></div>
         </div>
-        <button class="reset-button" id="reset-filters" type="button">Limpar filtros</button>
+        <div class="toolbar-side">
+          <p class="toolbar-summary" id="filter-summary-text"></p>
+          <button class="reset-button" id="reset-filters" type="button">Limpar filtros</button>
+        </div>
       </section>
 
-      <section class="filter-summary panel">
-        <div>
-          <p class="panel-kicker">Recorte ativo</p>
-          <h2 id="filter-summary-title">Todos os estados e sexos</h2>
-        </div>
-        <p class="filter-summary-text" id="filter-summary-text"></p>
-      </section>
-
-      <section class="metric-grid">
+      <section class="metric-grid" aria-label="Indicadores do recorte">
         <article class="metric-card panel">
           <span class="metric-label">Casos no recorte</span>
           <strong class="metric-value" id="metric-total">-</strong>
           <span class="metric-note" id="metric-total-note"></span>
         </article>
         <article class="metric-card panel">
-          <span class="metric-label">Último ano do recorte</span>
+          <span class="metric-label" id="metric-latest-label">Último ano</span>
           <strong class="metric-value" id="metric-latest">-</strong>
           <span class="metric-note" id="metric-latest-note"></span>
+        </article>
+        <article class="metric-card panel">
+          <span class="metric-label" id="metric-share-label">Participação feminina</span>
+          <strong class="metric-value" id="metric-share">-</strong>
+          <span class="metric-note" id="metric-share-note"></span>
         </article>
         <article class="metric-card panel">
           <span class="metric-label">Estado líder</span>
           <strong class="metric-value" id="metric-state">-</strong>
           <span class="metric-note" id="metric-state-note"></span>
         </article>
-        <article class="metric-card panel">
-          <span class="metric-label">Anos com notificação</span>
-          <strong class="metric-value" id="metric-active-years">-</strong>
-          <span class="metric-note" id="metric-active-years-note"></span>
-        </article>
-      </section>
-
-      <section class="panel agent-summary">
-        <div class="panel-header">
-          <div>
-            <p class="panel-kicker">Resumo</p>
-            <h2>Leitura analítica do recorte</h2>
-            <p class="panel-note">
-              Síntese preparada a partir de <code>agents/data_scientist_agent.md</code> para orientar a leitura dos gráficos.
-            </p>
-          </div>
-        </div>
-        <div class="agent-summary-grid">
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">10.400</span>
-            <span class="agent-summary-label">notificações no recorte</span>
-            <p class="agent-summary-text">Total acumulado entre 2007 e 2025 nos cinco estados analisados.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">64,5%</span>
-            <span class="agent-summary-label">predomínio feminino</span>
-            <p class="agent-summary-text">Mulheres concentram a maior parte das notificações no conjunto avaliado.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">72,9%</span>
-            <span class="agent-summary-label">São Paulo</span>
-            <p class="agent-summary-text">O estado lidera de forma muito dominante e influencia fortemente o agregado.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">2025</span>
-            <span class="agent-summary-label">pico da série</span>
-            <p class="agent-summary-text">O último ano do recorte concentra o maior volume observado em ambos os sexos.</p>
-          </article>
-          <article class="agent-summary-card">
-            <span class="agent-summary-value">Medicamento</span>
-            <span class="agent-summary-label">agente líder</span>
-            <p class="agent-summary-text">O principal grupo tóxico do painel, com destaque absoluto sobre os demais.</p>
-          </article>
-        </div>
       </section>
 
       <section class="dashboard-grid">
@@ -869,6 +1123,7 @@ body::after {
             <div>
               <p class="panel-kicker">Tendência</p>
               <h2>Série anual do recorte</h2>
+              <p class="panel-note" id="trend-note"></p>
             </div>
           </div>
           <div class="plot plot-lg" id="trend-chart"></div>
@@ -877,47 +1132,61 @@ body::after {
         <article class="panel panel-span-4">
           <div class="panel-header">
             <div>
-              <p class="panel-kicker">Mapa temporal</p>
-              <h2>Intensidade por estado e ano</h2>
+              <p class="panel-kicker">Composição</p>
+              <h2>Participação feminina por ano</h2>
+              <p class="panel-note" id="share-note"></p>
             </div>
           </div>
-          <div class="plot plot-lg" id="heatmap-chart"></div>
+          <div class="plot plot-lg" id="share-chart"></div>
         </article>
 
-        <article class="panel panel-span-12">
+        <article class="panel panel-span-12 panel-heat">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Mapa temporal</p>
+              <h2>Intensidade por estado e ano</h2>
+              <p class="panel-note" id="heatmap-note"></p>
+            </div>
+            <div class="segmented-control segmented-control--sm" id="heatmap-mode" role="group" aria-label="Escala do mapa"></div>
+          </div>
+          <div class="plot plot-heat" id="heatmap-chart"></div>
+        </article>
+
+        <article class="panel panel-span-12 panel-multiples">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Estados lado a lado</p>
+              <h2>Série por estado, cada um na própria escala</h2>
+              <p class="panel-note">
+                São Paulo concentra a maior parte dos casos e domina o agregado. Aqui cada estado tem eixo próprio, para que
+                a forma da série de estados menores fique visível.
+              </p>
+            </div>
+          </div>
+          <div class="plot plot-multiples" id="multiples-chart"></div>
+        </article>
+
+        <article class="panel panel-span-6">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">Participação territorial</p>
-              <h2>Distribuição proporcional de casos por estado</h2>
-              <p class="panel-note" id="pie-note"></p>
+              <h2>Casos acumulados por estado</h2>
+              <p class="panel-note" id="states-note"></p>
             </div>
           </div>
-          <div class="pie-grid">
-            <div class="plot plot-md" id="pie-total-chart"></div>
-            <div class="plot plot-md" id="pie-feminino-chart"></div>
-            <div class="plot plot-md" id="pie-masculino-chart"></div>
-          </div>
+          <div class="plot plot-lg" id="states-chart"></div>
         </article>
 
         <article class="panel panel-span-6">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">Perfil tóxico</p>
-              <h2>Grupos de agentes com maior volume</h2>
+              <h2>Grupos de agentes</h2>
+              <p class="panel-note" id="toxic-note"></p>
             </div>
+            <div class="segmented-control segmented-control--sm" id="toxic-mode" role="group" aria-label="Escala do perfil tóxico"></div>
           </div>
           <div class="plot plot-lg" id="toxic-chart"></div>
-        </article>
-
-        <article class="panel panel-span-6">
-          <div class="panel-header">
-            <div>
-              <p class="panel-kicker">Estado líder do recorte</p>
-              <h2>Comparação anual por sexo</h2>
-              <p class="panel-note" id="detail-note"></p>
-            </div>
-          </div>
-          <div class="plot plot-lg" id="detail-chart"></div>
         </article>
 
         <article class="panel panel-span-7">
@@ -943,12 +1212,16 @@ body::after {
             <div>
               <p class="panel-kicker">Leitura rápida</p>
               <h2>Principais achados</h2>
-              <p class="panel-note" id="insight-note"></p>
+              <p class="panel-note">Os destaques acompanham o recorte ativo de sexo e estados.</p>
             </div>
           </div>
           <ul class="insight-list" id="insight-list"></ul>
         </article>
       </section>
+
+      <footer class="footnote">
+        Fonte: notificações de intoxicação exógena (dados CFF). Anos sem notificação registrada aparecem como zero.
+      </footer>
     </div>
 
         <script>
@@ -4839,7 +5112,7 @@ return Plotly;
 window.__DASHBOARD_DATA__ = {
   "metadata": {
     "title": "Dashboard de intoxicação exógena em idosos",
-    "generated_at_utc": "2026-07-06T22:48:22.300484+00:00",
+    "generated_at_utc": "2026-10-10T23:13:13.053858+00:00",
     "start_year": 2007,
     "end_year": 2025,
     "states": [
@@ -26034,18 +26307,7 @@ window.__DASHBOARD_DATA__ = {
 };
 </script>
     <script>
-const SEX_PALETTE = {
-  Masculino: "#5B7FA3",
-  Feminino: "#C06A6A",
-};
-
-const STATE_COLORS = {
-  "Sao Paulo": "#5C7FA3",
-  "Santa Catarina": "#7BA6C8",
-  "Distrito Federal": "#88A86A",
-  Paraiba: "#C08F63",
-  Acre: "#B8778D",
-};
+const SEXES = ["Feminino", "Masculino"];
 
 const STATE_LABELS = {
   Acre: "Acre",
@@ -26055,58 +26317,62 @@ const STATE_LABELS = {
   "Santa Catarina": "Santa Catarina",
 };
 
-const PIE_PALETTE = [
-  "#5C7FA3",
-  "#78A2BF",
-  "#8DB37A",
-  "#C49A65",
-  "#C17373",
-  "#7A8CC7",
-  "#6FB3A5",
-  "#A77AB8",
-  "#D08E62",
-  "#90A96D",
-];
-
 const TOXIC_GROUP_LABELS = {
   "Cosmético_higiene pessoal": "Cosmético e higiene pessoal",
   "Agrotóxico uso agrícola": "Agrotóxico agrícola",
-  "Prod. uso domiciliar": "Uso domiciliar",
   "Agrotóxico uso doméstico": "Agrotóxico doméstico",
+  "Agrotóxico uso saúde pública": "Agrotóxico saúde pública",
+  "Prod. uso domiciliar": "Produto domiciliar",
   "Prod. químico uso industrial": "Químico industrial",
-  "Prod. uso veterinário": "Uso veterinário",
-  "Drogas de abuso": "Drogas abuso",
+  "Prod. uso veterinário": "Produto veterinário",
+  "Ign/Branco": "Ignorado ou em branco",
 };
+
+const TOXIC_TOP_N = 8;
+// Aspas simples: o nome da fonte vai para atributos style do SVG exportado.
+const FONT_BODY = "'Source Sans 3', 'Trebuchet MS', sans-serif";
+const FONT_DISPLAY = "'Sora', 'Trebuchet MS', sans-serif";
+const THEME_STORAGE_KEY = "tox-older-theme";
 
 const CHART_CONFIG = {
   displayModeBar: false,
   responsive: true,
 };
 
-const PLOT_LAYOUT_BASE = {
-  paper_bgcolor: "rgba(0,0,0,0)",
-  plot_bgcolor: "rgba(0,0,0,0)",
-  margin: { t: 30, r: 20, b: 50, l: 55 },
-  font: {
-    family: '"Source Sans 3", "Trebuchet MS", sans-serif',
-    color: "#16313A",
-  },
-};
-
 let dashboardData = null;
 let selectedSex = "Todos";
 let selectedStates = [];
+let heatmapMode = "relative";
+let toxicMode = "count";
+let theme = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    applyStoredTheme();
+    initBackground();
     dashboardData = await fetchDashboardData();
     selectedStates = [...dashboardData.metadata.states];
 
     hydrateMetadata();
     buildSexFilter();
     buildStateFilter();
+    buildModeControl("heatmap-mode", [
+      ["relative", "Relativo ao pico"],
+      ["absolute", "Casos absolutos"],
+    ], () => heatmapMode, (value) => {
+      heatmapMode = value;
+      renderHeatmap(getFilteredYearTotals());
+    });
+    buildModeControl("toxic-mode", [
+      ["count", "Casos"],
+      ["share", "% por sexo"],
+    ], () => toxicMode, (value) => {
+      toxicMode = value;
+      renderToxicChart(getFilteredTidyCounts());
+    });
     bindToolbarActions();
-    renderDashboard();
+    bindResize();
+    renderAll();
   } catch (error) {
     console.error(error);
     document.body.innerHTML = `
@@ -26131,23 +26397,132 @@ async function fetchDashboardData() {
   return response.json();
 }
 
+/* ---------- Theme ---------- */
+
+function applyStoredTheme() {
+  let stored = null;
+  try {
+    stored = localStorage.getItem(THEME_STORAGE_KEY);
+  } catch (error) {
+    stored = null;
+  }
+  document.documentElement.dataset.theme = stored === "dark" ? "dark" : "light";
+  readTheme();
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch (error) {
+      // Preferência apenas local; segue sem persistir.
+    }
+    readTheme();
+    window.dispatchEvent(new Event("resize"));
+    if (dashboardData) {
+      renderAll();
+    }
+  });
+}
+
+function readTheme() {
+  const styles = getComputedStyle(document.documentElement);
+  const token = (name) => styles.getPropertyValue(name).trim();
+  theme = {
+    text: token("--text"),
+    muted: token("--muted"),
+    faint: token("--faint"),
+    grid: token("--grid"),
+    axis: token("--axis"),
+    accent: token("--accent"),
+    panel: token("--panel-solid"),
+    border: token("--border-strong"),
+    sex: { Feminino: token("--female"), Masculino: token("--male") },
+    heat: [0, 1, 2, 3, 4, 5, 6].map((step) => token(`--heat-${step}`)),
+    dot: token("--dot"),
+    scale: parseFloat(styles.fontSize) / 16,
+  };
+}
+
+function fs(value) {
+  return Math.round(value * theme.scale * 10) / 10;
+}
+
+function baseLayout(overrides = {}) {
+  return {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    margin: { t: 24, r: 16, b: 40, l: 52 },
+    font: { family: FONT_BODY, color: theme.text, size: fs(13) },
+    hoverlabel: {
+      bgcolor: theme.panel,
+      bordercolor: theme.border,
+      font: { family: FONT_BODY, color: theme.text, size: fs(13) },
+    },
+    showlegend: false,
+    ...overrides,
+  };
+}
+
+function axis(overrides = {}) {
+  return {
+    gridcolor: theme.grid,
+    zerolinecolor: theme.axis,
+    linecolor: theme.axis,
+    tickcolor: theme.axis,
+    tickfont: { color: theme.muted, size: fs(12) },
+    title: { font: { color: theme.muted, size: fs(12) } },
+    automargin: true,
+    ...overrides,
+  };
+}
+
+function yearAxis(overrides = {}) {
+  return axis({
+    showgrid: false,
+    showline: true,
+    ticks: "outside",
+    ticklen: 4,
+    dtick: 2,
+    tick0: 2007,
+    fixedrange: true,
+    ...overrides,
+  });
+}
+
+function hexToRgba(hex, alpha) {
+  const value = hex.replace("#", "");
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/* ---------- Filters ---------- */
+
 function hydrateMetadata() {
-  const { start_year: startYear, end_year: endYear, generated_at_utc: generatedAt } = dashboardData.metadata;
-  document.getElementById("meta-period").textContent = `Período ${startYear} - ${endYear}`;
+  const { start_year: startYear, end_year: endYear, generated_at_utc: generatedAt, states } = dashboardData.metadata;
+  document.getElementById("meta-period").textContent = `${startYear} – ${endYear}`;
+  document.getElementById("meta-states").textContent = `${states.length} estados`;
   document.getElementById("meta-generated").textContent = `Atualizado em ${formatDateTime(generatedAt)}`;
 }
 
 function buildSexFilter() {
   const container = document.getElementById("sex-filter");
-  const options = ["Todos", "Masculino", "Feminino"];
-
   container.innerHTML = "";
-  options.forEach((option) => {
+
+  ["Todos", ...SEXES].forEach((option) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `segmented-button${option === selectedSex ? " is-active" : ""}`;
-    button.textContent = option;
     button.setAttribute("aria-pressed", String(option === selectedSex));
+    if (option !== "Todos") {
+      const swatch = document.createElement("span");
+      swatch.className = "swatch";
+      swatch.style.background = theme.sex[option];
+      button.appendChild(swatch);
+    }
+    button.appendChild(document.createTextNode(option));
     button.addEventListener("click", () => {
       selectedSex = option;
       buildSexFilter();
@@ -26159,33 +26534,55 @@ function buildSexFilter() {
 
 function buildStateFilter() {
   const container = document.getElementById("state-filter");
-  const states = dashboardData.metadata.states;
+  const states = sortStatesByTotal(dashboardData.metadata.states);
+  const allSelected = selectedStates.length === states.length;
 
   container.innerHTML = "";
 
   const allButton = document.createElement("button");
   allButton.type = "button";
-  allButton.className = `chip${selectedStates.length === states.length ? " is-active" : ""}`;
+  allButton.className = `chip${allSelected ? " is-active" : ""}`;
   allButton.textContent = "Todos";
-  allButton.setAttribute("aria-pressed", String(selectedStates.length === states.length));
+  allButton.setAttribute("aria-pressed", String(allSelected));
   allButton.title = "Selecionar todos os estados";
   allButton.addEventListener("click", () => {
-    selectedStates = [...states];
+    selectedStates = [...dashboardData.metadata.states];
     buildStateFilter();
     renderDashboard();
   });
   container.appendChild(allButton);
 
   states.forEach((state) => {
+    const isActive = !allSelected && selectedStates.includes(state);
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `chip${selectedStates.includes(state) ? " is-active" : ""}`;
+    button.className = `chip${isActive ? " is-active" : ""}`;
     button.textContent = formatStateLabel(state);
-    button.setAttribute("aria-pressed", String(selectedStates.includes(state)));
+    button.setAttribute("aria-pressed", String(isActive));
     button.title = "Clique para incluir ou remover este estado do recorte";
     button.addEventListener("click", () => toggleStateSelection(state));
     container.appendChild(button);
   });
+}
+
+function buildModeControl(containerId, options, getValue, onChange) {
+  const container = document.getElementById(containerId);
+  const draw = () => {
+    container.innerHTML = "";
+    options.forEach(([value, label]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `segmented-button${getValue() === value ? " is-active" : ""}`;
+      button.setAttribute("aria-pressed", String(getValue() === value));
+      button.textContent = label;
+      button.addEventListener("click", () => {
+        onChange(value);
+        draw();
+      });
+      container.appendChild(button);
+    });
+  };
+  draw();
 }
 
 function bindToolbarActions() {
@@ -26198,20 +26595,43 @@ function bindToolbarActions() {
   });
 }
 
+function bindResize() {
+  let timer = null;
+  let lastWidth = window.innerWidth;
+  window.addEventListener("resize", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (Math.abs(window.innerWidth - lastWidth) < 24) {
+        return;
+      }
+      lastWidth = window.innerWidth;
+      readTheme();
+      renderDashboard();
+    }, 180);
+  });
+}
+
 function toggleStateSelection(state) {
-  if (selectedStates.includes(state)) {
+  const allStates = dashboardData.metadata.states;
+
+  if (selectedStates.length === allStates.length) {
+    // Com todos ativos, o primeiro clique isola o estado escolhido.
+    selectedStates = [state];
+  } else if (selectedStates.includes(state)) {
     selectedStates = selectedStates.filter((item) => item !== state);
   } else {
     selectedStates = [...selectedStates, state];
   }
 
   if (!selectedStates.length) {
-    selectedStates = [...dashboardData.metadata.states];
+    selectedStates = [...allStates];
   }
 
   buildStateFilter();
   renderDashboard();
 }
+
+/* ---------- Data helpers ---------- */
 
 function getFilteredYearTotals() {
   return dashboardData.tables.year_totals.filter((row) => {
@@ -26233,69 +26653,163 @@ function getFilteredTidyCounts() {
   });
 }
 
+function activeSexes() {
+  return selectedSex === "Todos" ? SEXES : [selectedSex];
+}
+
+function years() {
+  return dashboardData.metadata.years;
+}
+
+function seriesByYear(rows) {
+  const totals = aggregateByYear(rows);
+  return years().map((year) => totals.get(year) || 0);
+}
+
+function totalsByState(rows) {
+  return Object.entries(groupBy(rows, "state"))
+    .map(([state, stateRows]) => ({ state, total: sum(stateRows.map((row) => row.total_year)) }))
+    .sort((left, right) => right.total - left.total);
+}
+
+function sortStatesByTotal(states) {
+  const totals = new Map(totalsByState(dashboardData.tables.year_totals).map((item) => [item.state, item.total]));
+  return [...states].sort((left, right) => (totals.get(right) || 0) - (totals.get(left) || 0));
+}
+
+/* ---------- Render ---------- */
+
+function renderAll() {
+  buildSexFilter();
+  renderHero();
+  renderDashboard();
+}
+
 function renderDashboard() {
   const filteredYearTotals = getFilteredYearTotals();
   const stateScopedYearTotals = getStateScopedYearTotals();
   const filteredTidyCounts = getFilteredTidyCounts();
 
   renderFilterSummary(filteredYearTotals);
-  renderMetrics(filteredYearTotals);
+  renderMetrics(filteredYearTotals, stateScopedYearTotals);
   renderTrendChart(filteredYearTotals);
+  renderShareChart(stateScopedYearTotals);
   renderHeatmap(filteredYearTotals);
-  renderPieCharts(stateScopedYearTotals);
+  renderMultiples(filteredYearTotals);
+  renderStatesChart(stateScopedYearTotals);
   renderToxicChart(filteredTidyCounts);
-  renderDetailChart(filteredYearTotals);
-  renderStateTable(filteredYearTotals);
-  renderInsights(filteredYearTotals, filteredTidyCounts);
+  renderStateTable(stateScopedYearTotals);
+  renderInsights(filteredYearTotals, stateScopedYearTotals, filteredTidyCounts);
+}
+
+function renderHero() {
+  const allRows = dashboardData.tables.year_totals;
+  const total = sum(allRows.map((row) => row.total_year));
+  const female = sum(allRows.filter((row) => row.sex_label === "Feminino").map((row) => row.total_year));
+  const series = seriesByYear(allRows);
+
+  const agents = Object.entries(groupBy(dashboardData.tables.toxic_profile, "toxic_group"))
+    .map(([group, rows]) => ({ group, total: sum(rows.map((row) => row.count)) }))
+    .sort((left, right) => right.total - left.total);
+
+  document.getElementById("hero-total").textContent = formatInteger(total);
+  document.getElementById("hero-female").textContent = formatPercent((female / total) * 100);
+  document.getElementById("hero-agent").textContent = formatToxicGroupLabel(agents[0].group);
+
+  // Sinal: média dos últimos 5 anos contra os 5 anos anteriores.
+  const recent = sum(series.slice(-5)) / 5;
+  const before = sum(series.slice(-10, -5)) / 5;
+  const change = before > 0 ? ((recent - before) / before) * 100 : 0;
+  const label = change > 10 ? "Tendência de alta" : change < -10 ? "Tendência de queda" : "Ritmo estável";
+  document.getElementById("hero-signal").textContent = label;
+  document.getElementById("hero-signal-note").textContent =
+    `${change >= 0 ? "+" : "−"}${formatPercent(Math.abs(change))} na média anual dos últimos 5 anos`;
+  drawSpark(document.getElementById("hero-signal-spark"), series);
+}
+
+function drawSpark(svg, values) {
+  const width = 120;
+  const height = 36;
+  const pad = 4;
+  const maxValue = Math.max(...values, 1);
+  const points = values.map((value, index) => [
+    pad + (index / (values.length - 1)) * (width - pad * 2),
+    height - pad - (value / maxValue) * (height - pad * 2),
+  ]);
+  const line = points.map(([x, y], index) => `${index ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join("");
+  const [lastX] = points[points.length - 1];
+  const color = theme.accent;
+  svg.innerHTML = `
+    <path d="${line}L${lastX.toFixed(1)} ${height}L${pad} ${height}Z" fill="${hexToRgba(color, 0.12)}" />
+    <path d="${line}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+  `;
 }
 
 function renderFilterSummary(rows) {
-  const titleNode = document.getElementById("filter-summary-title");
-  const textNode = document.getElementById("filter-summary-text");
   const totalStates = dashboardData.metadata.states.length;
-  const selectedStateLabels = formatStateList(selectedStates);
   const stateLabel =
     selectedStates.length === totalStates
-      ? "Todos os estados"
-      : `${selectedStates.length} estado(s): ${selectedStateLabels.join(", ")}`;
-  const sexLabel = selectedSex === "Todos" ? "todos os sexos" : selectedSex.toLowerCase();
+      ? "todos os estados"
+      : formatStateList(selectedStates).join(", ");
+  const sexLabel = selectedSex === "Todos" ? "ambos os sexos" : selectedSex.toLowerCase();
   const totalCases = sum(rows.map((row) => row.total_year));
 
-  titleNode.textContent = `${stateLabel} | ${sexLabel}`;
-  textNode.textContent = `${formatInteger(totalCases)} casos no recorte atual, com visualizações sincronizadas para tendência, heatmap, tabela e insights.`;
+  document.getElementById("filter-summary-text").innerHTML =
+    `<strong>${formatInteger(totalCases)} casos</strong> · ${stateLabel} · ${sexLabel}`;
 }
 
-function renderMetrics(rows) {
+function renderMetrics(rows, stateRows) {
   const totalCases = sum(rows.map((row) => row.total_year));
-  const latestYear = Math.max(...dashboardData.metadata.years);
-  const latestYearTotal = sum(rows.filter((row) => row.year === latestYear).map((row) => row.total_year));
-  const groupedByState = groupBy(rows, "state");
-  const dominantEntry = Object.entries(groupedByState)
-    .map(([state, stateRows]) => ({
-      state,
-      total: sum(stateRows.map((row) => row.total_year)),
-    }))
-    .sort((left, right) => right.total - left.total)[0];
-  const yearsWithCases = new Set(rows.filter((row) => row.total_year > 0).map((row) => row.year)).size;
+  const series = seriesByYear(rows);
+  const latestYear = years()[years().length - 1];
+  const latest = series[series.length - 1];
+  const previous = series[series.length - 2];
+  const dominant = totalsByState(rows)[0];
 
   setMetric(
     "metric-total",
     formatInteger(totalCases),
     "metric-total-note",
-    `${selectedStates.length} estado(s) no recorte`
+    `${selectedStates.length} estado(s), ${years()[0]}–${latestYear}`
   );
-  setMetric("metric-latest", String(latestYear), "metric-latest-note", `${formatInteger(latestYearTotal)} casos`);
+
+  document.getElementById("metric-latest-label").textContent = `Casos em ${latestYear}`;
+  document.getElementById("metric-latest").textContent = formatInteger(latest);
+  const latestNote = document.getElementById("metric-latest-note");
+  if (previous > 0) {
+    const change = ((latest - previous) / previous) * 100;
+    const direction = change >= 0 ? "up" : "down";
+    const sign = change >= 0 ? "+" : "−";
+    latestNote.innerHTML = `<span class="delta delta--${direction}">${sign}${formatPercent(Math.abs(change))}</span> em relação a ${latestYear - 1}`;
+  } else {
+    latestNote.textContent = `sem casos em ${latestYear - 1} para comparar`;
+  }
+
+  const scopeTotal = sum(stateRows.map((row) => row.total_year));
+  if (selectedSex === "Todos") {
+    const female = sum(rows.filter((row) => row.sex_label === "Feminino").map((row) => row.total_year));
+    document.getElementById("metric-share-label").textContent = "Participação feminina";
+    setMetric(
+      "metric-share",
+      totalCases ? formatPercent((female / totalCases) * 100) : "-",
+      "metric-share-note",
+      `${formatInteger(female)} mulheres · ${formatInteger(totalCases - female)} homens`
+    );
+  } else {
+    document.getElementById("metric-share-label").textContent = `Peso do sexo ${selectedSex.toLowerCase()}`;
+    setMetric(
+      "metric-share",
+      scopeTotal ? formatPercent((totalCases / scopeTotal) * 100) : "-",
+      "metric-share-note",
+      `de ${formatInteger(scopeTotal)} casos nos estados selecionados`
+    );
+  }
+
   setMetric(
     "metric-state",
-    dominantEntry ? formatStateLabel(dominantEntry.state) : "-",
+    dominant && dominant.total > 0 ? formatStateLabel(dominant.state) : "-",
     "metric-state-note",
-    dominantEntry ? `${formatInteger(dominantEntry.total)} casos acumulados` : "Sem registros"
-  );
-  setMetric(
-    "metric-active-years",
-    String(yearsWithCases),
-    "metric-active-years-note",
-    selectedSex === "Todos" ? "anos com pelo menos uma notificação" : `anos com ${selectedSex.toLowerCase()}`
+    dominant && totalCases ? `${formatPercent((dominant.total / totalCases) * 100)} dos casos do recorte` : "Sem registros"
   );
 }
 
@@ -26305,52 +26819,104 @@ function setMetric(valueId, value, noteId, note) {
 }
 
 function renderTrendChart(rows) {
-  const chartNode = document.getElementById("trend-chart");
   const traces = [];
+  const annotations = [];
+  const sexes = activeSexes();
+  const lastYear = years()[years().length - 1];
 
-  if (selectedSex === "Todos") {
-    ["Masculino", "Feminino"].forEach((sex) => {
-      const sexRows = rows.filter((row) => row.sex_label === sex);
-      const yearly = aggregateByYear(sexRows);
-      traces.push({
-        type: "scatter",
-        mode: "lines+markers",
-        name: sex,
-        x: dashboardData.metadata.years,
-        y: dashboardData.metadata.years.map((year) => yearly.get(year) || 0),
-        line: { color: SEX_PALETTE[sex], width: 3 },
-        marker: { size: 8 },
-      });
-    });
-  } else {
-    const yearly = aggregateByYear(rows);
+  sexes.forEach((sex) => {
+    const y = seriesByYear(rows.filter((row) => row.sex_label === sex));
+    const color = theme.sex[sex];
     traces.push({
       type: "scatter",
       mode: "lines+markers",
-      name: selectedSex,
-      x: dashboardData.metadata.years,
-      y: dashboardData.metadata.years.map((year) => yearly.get(year) || 0),
-      line: { color: SEX_PALETTE[selectedSex], width: 3.4 },
-      marker: { size: 8 },
+      name: sex,
+      x: years(),
+      y,
+      line: { color, width: 2.5 },
+      marker: { size: fs(7), color, line: { color: theme.panel, width: 1.5 } },
+      fill: sexes.length === 1 ? "tozeroy" : "none",
+      fillcolor: hexToRgba(color, 0.1),
+      hovertemplate: `${sex}: <b>%{y:,.0f}</b><extra></extra>`,
     });
-  }
+    annotations.push({
+      x: lastYear,
+      y: y[y.length - 1],
+      xanchor: "left",
+      xshift: 12,
+      text: `<b>${sex}</b> ${formatInteger(y[y.length - 1])}`,
+      showarrow: false,
+      font: { color: theme.text, size: fs(12) },
+    });
+  });
+
+  const total = seriesByYear(rows);
+  const peakIndex = total.indexOf(Math.max(...total));
+  document.getElementById("trend-note").textContent = total[peakIndex] > 0
+    ? `Pico do recorte em ${years()[peakIndex]}, com ${formatInteger(total[peakIndex])} notificações no ano.`
+    : "Sem notificações no recorte atual.";
 
   Plotly.react(
-    chartNode,
+    document.getElementById("trend-chart"),
     traces,
-    {
-      ...PLOT_LAYOUT_BASE,
-      xaxis: { title: "Ano", tickmode: "linear" },
-      yaxis: { title: "Notificações" },
-      legend: { orientation: "h", y: 1.14 },
-    },
+    baseLayout({
+      margin: { t: 16, r: fs(isNarrow() ? 92 : 120), b: 40, l: 52 },
+      hovermode: "x unified",
+      separators: ",.",
+      xaxis: yearAxis({ range: [2006.5, 2025.5], dtick: isNarrow() ? 6 : 2, showspikes: true, spikemode: "across", spikecolor: theme.axis, spikethickness: 1, spikedash: "dot" }),
+      yaxis: axis({ title: { text: "Notificações", font: { color: theme.muted, size: fs(12) } }, rangemode: "tozero", fixedrange: true }),
+      annotations,
+    }),
+    CHART_CONFIG
+  );
+}
+
+function renderShareChart(stateRows) {
+  const female = seriesByYear(stateRows.filter((row) => row.sex_label === "Feminino"));
+  const total = seriesByYear(stateRows);
+  const share = female.map((value, index) => (total[index] > 0 ? (value / total[index]) * 100 : null));
+  const overall = sum(total) ? (sum(female) / sum(total)) * 100 : 0;
+
+  document.getElementById("share-note").textContent =
+    `Nos estados selecionados, ${formatPercent(overall)} dos casos são de mulheres. A linha pontilhada marca a paridade (50%). Este gráfico ignora o filtro de sexo.`;
+
+  Plotly.react(
+    document.getElementById("share-chart"),
+    [
+      {
+        type: "bar",
+        x: years(),
+        y: share,
+        customdata: total,
+        marker: { color: share.map((value) => (value !== null && value >= 50 ? theme.sex.Feminino : hexToRgba(theme.sex.Feminino, 0.45))) },
+        hovertemplate: "%{x}<br>Mulheres: <b>%{y:.1f}%</b><br>Total do ano: %{customdata:,.0f}<extra></extra>",
+      },
+    ],
+    baseLayout({
+      margin: { t: 16, r: 16, b: 40, l: 44 },
+      bargap: 0.25,
+      barcornerradius: 4,
+      separators: ",.",
+      xaxis: yearAxis({ dtick: 3 }),
+      yaxis: axis({ range: [0, 100], ticksuffix: "%", dtick: 25, fixedrange: true }),
+      shapes: [
+        {
+          type: "line",
+          xref: "paper",
+          x0: 0,
+          x1: 1,
+          y0: 50,
+          y1: 50,
+          line: { color: theme.muted, width: 1, dash: "dot" },
+        },
+      ],
+    }),
     CHART_CONFIG
   );
 }
 
 function renderHeatmap(rows) {
-  const years = dashboardData.metadata.years;
-  const states = [...selectedStates];
+  const states = sortStatesByTotal(selectedStates);
   const grouped = new Map();
 
   rows.forEach((row) => {
@@ -26358,395 +26924,597 @@ function renderHeatmap(rows) {
     grouped.set(key, (grouped.get(key) || 0) + row.total_year);
   });
 
-  const absoluteZ = states.map((state) =>
-    years.map((year) => grouped.get(`${state}::${year}`) || 0)
+  const absoluteZ = states.map((state) => years().map((year) => grouped.get(`${state}::${year}`) || 0));
+  const relativeZ = absoluteZ.map((series) => {
+    const maxValue = Math.max(...series, 0);
+    return series.map((value) => (maxValue > 0 ? value / maxValue : 0));
+  });
+  const isRelative = heatmapMode === "relative";
+  const z = isRelative ? relativeZ : absoluteZ;
+  const zmax = isRelative ? 1 : Math.max(1, ...absoluteZ.flat());
+  const text = absoluteZ.map((series) => series.map((value) => (value > 0 ? formatInteger(value) : "")));
+  // Texto claro sobre células escuras, escuro sobre células claras.
+  const dark = document.documentElement.dataset.theme === "dark";
+  const scale = theme.heat.map((color, index) => [index / (theme.heat.length - 1), color]);
+
+  document.getElementById("heatmap-note").textContent = isRelative
+    ? "Cada linha é escalada pelo pico do próprio estado (x / máx). Assim a variação de estados pequenos fica visível. Os números nas células são casos absolutos."
+    : "Escala única para todos os estados. Mostra o peso real de cada um, mas São Paulo domina a escala.";
+
+  const textColors = z.map((series) =>
+    series.map((value) => {
+      const strong = value / zmax > 0.55;
+      return dark ? (strong ? "#0b2523" : "#e6f1f0") : strong ? "#ffffff" : "#16313a";
+    })
   );
-  const z = absoluteZ.map((stateSeries) => {
-    const maxValue = Math.max(...stateSeries, 0);
-    return stateSeries.map((value) => (maxValue > 0 ? value / maxValue : 0));
+
+  const chartNode = document.getElementById("heatmap-chart");
+  const traces = [
+    {
+      type: "heatmap",
+      x: years(),
+      y: states.map(formatStateLabel),
+      z,
+      zmin: 0,
+      zmax,
+      xgap: 3,
+      ygap: 3,
+      customdata: absoluteZ,
+      colorscale: scale,
+      showscale: chartNode.clientWidth > 560,
+      colorbar: {
+        thickness: 10,
+        outlinewidth: 0,
+        len: 0.9,
+        tickfont: { color: theme.muted, size: fs(11) },
+        tickformat: isRelative ? ".0%" : ",.0f",
+      },
+      hovertemplate: isRelative
+        ? "<b>%{y}</b> · %{x}<br>Casos: %{customdata:,.0f}<br>%{z:.0%} do pico do estado<extra></extra>"
+        : "<b>%{y}</b> · %{x}<br>Casos: %{customdata:,.0f}<extra></extra>",
+    },
+  ];
+
+  const annotations = [];
+  states.forEach((state, rowIndex) => {
+    years().forEach((year, colIndex) => {
+      if (!text[rowIndex][colIndex]) {
+        return;
+      }
+      annotations.push({
+        x: year,
+        y: formatStateLabel(state),
+        text: text[rowIndex][colIndex],
+        showarrow: false,
+        font: { size: fs(11), color: textColors[rowIndex][colIndex] },
+      });
+    });
   });
 
+  const heatHeight = Math.max(220, states.length * fs(54) + fs(70));
+  chartNode.style.minHeight = `${heatHeight}px`;
+
   Plotly.react(
-    document.getElementById("heatmap-chart"),
-    [
-      {
-        type: "heatmap",
-        x: years,
-        y: states,
-        z,
-        zmin: 0,
-        zmax: 1,
-        customdata: absoluteZ,
-        colorscale: [
-          [0.0, "#FFF9E8"],
-          [0.2, "#FEE7A8"],
-          [0.45, "#FDB366"],
-          [0.7, "#F46D43"],
-          [0.88, "#D73027"],
-          [1.0, "#A50026"],
-        ],
-        colorbar: {
-          title: "x / max(x)",
-        },
-        hovertemplate:
-          "Estado: %{y}<br>Ano: %{x}<br>Casos: %{customdata:,.0f}<br>Índice relativo: %{z:.2f}<extra></extra>",
-      },
-    ],
-    {
-      ...PLOT_LAYOUT_BASE,
-      margin: { t: 30, r: 18, b: 50, l: 90 },
-      xaxis: { title: "Ano", tickmode: "linear" },
-      yaxis: { title: "Estado", automargin: true },
-    },
+    chartNode,
+    traces,
+    baseLayout({
+      margin: { t: 10, r: 10, b: 36, l: 110 },
+      separators: ",.",
+      height: heatHeight,
+      xaxis: axis({ showgrid: false, dtick: chartNode.clientWidth > 760 ? 1 : 6, tick0: 2007, tickangle: 0, fixedrange: true, ticks: "", tickfont: { color: theme.muted, size: fs(11) } }),
+      yaxis: axis({ showgrid: false, autorange: "reversed", fixedrange: true, ticks: "", tickfont: { color: theme.text, size: fs(13) } }),
+      annotations: chartNode.clientWidth > 760 ? annotations : [],
+    }),
     CHART_CONFIG
   );
 }
 
-function renderPieCharts(rows) {
-  const pieNote = document.getElementById("pie-note");
-
-  if (selectedSex === "Todos") {
-    pieNote.textContent = "Os três gráficos comparam total, feminino e masculino dentro dos estados selecionados.";
-    renderPieChart("pie-total-chart", rows, "Total por estado", null);
-    renderPieChart("pie-feminino-chart", rows, "Feminino por estado", "Feminino");
-    renderPieChart("pie-masculino-chart", rows, "Masculino por estado", "Masculino");
-    return;
-  }
-
-  const comparatorSex = selectedSex === "Feminino" ? "Masculino" : "Feminino";
-  pieNote.textContent = `O primeiro gráfico segue o filtro ativo; os outros dois mantêm contexto comparativo nos mesmos estados.`;
-  renderPieChart("pie-total-chart", rows, `Recorte atual (${selectedSex})`, selectedSex);
-  renderPieChart("pie-feminino-chart", rows, "Total por estado", null);
-  renderPieChart("pie-masculino-chart", rows, `${comparatorSex} por estado`, comparatorSex);
+function isNarrow() {
+  return window.innerWidth <= 720;
 }
 
-function renderPieChart(elementId, rows, title, sexFilter) {
-  const baseRows = sexFilter ? rows.filter((row) => row.sex_label === sexFilter) : rows;
-  const grouped = Object.entries(groupBy(baseRows, "state"))
-    .map(([state, stateRows]) => ({
-      state,
-      total: sum(stateRows.map((row) => row.total_year)),
-    }))
-    .filter((item) => item.total > 0)
-    .sort((left, right) => right.total - left.total);
+function multiplesColumns() {
+  const width = document.getElementById("multiples-chart").clientWidth || window.innerWidth;
+  return Math.max(1, Math.min(5, Math.floor(width / fs(250))));
+}
 
-  const totalCases = sum(grouped.map((item) => item.total));
-  const pieColors = grouped.map((item, index) => PIE_PALETTE[index % PIE_PALETTE.length]);
+function renderMultiples(rows) {
+  const states = sortStatesByTotal(selectedStates);
+  const columns = Math.min(multiplesColumns(), states.length);
+  const rowCount = Math.ceil(states.length / columns);
+  const gapX = columns > 1 ? 0.05 : 0;
+  const gapY = rowCount > 1 ? 0.12 / rowCount + 0.06 : 0;
+  const cellWidth = (1 - gapX * (columns - 1)) / columns;
+  const cellHeight = (1 - gapY * (rowCount - 1)) / rowCount;
+  const sexes = activeSexes();
+
+  const traces = [];
+  const layout = baseLayout({
+    showlegend: sexes.length > 1,
+    legend: { orientation: "h", x: 1, xanchor: "right", y: 0.99, yanchor: "top", yref: "container", traceorder: "normal", font: { color: theme.muted, size: fs(12) } },
+    margin: { t: 44, r: 12, b: 30, l: 40 },
+    hovermode: "x unified",
+    separators: ",.",
+    height: rowCount * fs(210) + fs(40),
+    annotations: [],
+  });
+
+  states.forEach((state, index) => {
+    const col = index % columns;
+    const row = Math.floor(index / columns);
+    const suffix = index === 0 ? "" : String(index + 1);
+    const x0 = col * (cellWidth + gapX);
+    const yTop = 1 - row * (cellHeight + gapY);
+    const stateRows = rows.filter((item) => item.state === state);
+    const stateTotal = sum(stateRows.map((item) => item.total_year));
+
+    sexes.forEach((sex) => {
+      traces.push({
+        type: "scatter",
+        mode: "lines",
+        name: sex,
+        x: years(),
+        y: seriesByYear(stateRows.filter((item) => item.sex_label === sex)),
+        xaxis: `x${suffix}`,
+        yaxis: `y${suffix}`,
+        line: { color: theme.sex[sex], width: 2 },
+        showlegend: index === 0 && sexes.length > 1,
+        hovertemplate: `${sex}: <b>%{y:,.0f}</b><extra></extra>`,
+      });
+    });
+
+    layout[`xaxis${suffix}`] = yearAxis({
+      domain: [x0, x0 + cellWidth],
+      anchor: `y${suffix}`,
+      dtick: 9,
+      tick0: years()[0],
+      showspikes: true,
+      spikemode: "across",
+      spikecolor: theme.axis,
+      spikethickness: 1,
+      spikedash: "dot",
+    });
+    layout[`yaxis${suffix}`] = axis({
+      domain: [yTop - cellHeight, yTop],
+      anchor: `x${suffix}`,
+      rangemode: "tozero",
+      nticks: 4,
+      fixedrange: true,
+    });
+    layout.annotations.push({
+      xref: "paper",
+      yref: "paper",
+      x: x0,
+      y: yTop,
+      xanchor: "left",
+      yanchor: "bottom",
+      yshift: 8,
+      text: `<b>${formatStateLabel(state)}</b>  <span style="color:${theme.muted}">${formatInteger(stateTotal)} casos</span>`,
+      showarrow: false,
+      font: { family: FONT_BODY, size: fs(13), color: theme.text },
+    });
+  });
+
+  const chartNode = document.getElementById("multiples-chart");
+  chartNode.style.minHeight = `${layout.height}px`;
+  Plotly.react(chartNode, traces, layout, CHART_CONFIG);
+}
+
+function renderStatesChart(stateRows) {
+  const sexes = activeSexes();
+  const scoped = stateRows.filter((row) => sexes.includes(row.sex_label));
+  const ranked = totalsByState(scoped);
+  const scopeTotal = sum(ranked.map((item) => item.total));
+  const labels = ranked.map((item) => formatStateLabel(item.state));
+
+  document.getElementById("states-note").textContent = selectedSex === "Todos"
+    ? "Barras empilhadas por sexo. O rótulo mostra o total e a participação do estado no recorte."
+    : `Somente ${selectedSex.toLowerCase()}. O rótulo mostra o total e a participação do estado no recorte.`;
+
+  const traces = sexes.map((sex) => {
+    const values = ranked.map((item) =>
+      sum(scoped.filter((row) => row.state === item.state && row.sex_label === sex).map((row) => row.total_year))
+    );
+    return {
+      type: "bar",
+      orientation: "h",
+      name: sex,
+      y: labels,
+      x: values,
+      customdata: ranked.map((item, index) => (item.total ? (values[index] / item.total) * 100 : 0)),
+      marker: { color: theme.sex[sex], line: { color: theme.panel, width: 2 } },
+      hovertemplate: `<b>%{y}</b><br>${sex}: %{x:,.0f} (%{customdata:.1f}% do estado)<extra></extra>`,
+    };
+  });
+
+  const maxTotal = Math.max(1, ...ranked.map((item) => item.total));
+  const annotations = ranked.map((item, index) => ({
+    x: item.total,
+    y: labels[index],
+    xanchor: "left",
+    xshift: 8,
+    text: `<b>${formatInteger(item.total)}</b>  <span style="color:${theme.muted}">${scopeTotal ? formatPercent((item.total / scopeTotal) * 100) : "0%"}</span>`,
+    showarrow: false,
+    font: { color: theme.text, size: fs(12) },
+  }));
 
   Plotly.react(
-    document.getElementById(elementId),
-    [
-      {
-        type: "pie",
-        hole: 0.7,
-        labels: grouped.map((item) => formatStateLabel(item.state)),
-        values: grouped.map((item) => item.total),
-        sort: false,
-        direction: "clockwise",
-        rotation: 120,
-        textinfo: "none",
-        showlegend: true,
-        marker: {
-          colors: pieColors,
-          line: { color: "rgba(255, 255, 255, 0.95)", width: 2.5 },
-        },
-        hovertemplate:
-          "<b>%{label}</b><br>Casos: %{value:,.0f}<br>Participação: %{percent}<extra></extra>",
-        hoverlabel: {
-          bgcolor: "#FFFFFF",
-          bordercolor: "rgba(15, 63, 73, 0.15)",
-          font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', color: "#16313A", size: 13 },
-        },
-      },
-    ],
-    {
-      ...PLOT_LAYOUT_BASE,
-      title: {
-        text: title,
-        x: 0.02,
-        xanchor: "left",
-        font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 16 },
-      },
-      margin: { t: 52, r: 14, b: 92, l: 14 },
-      legend: {
-        orientation: "h",
-        x: 0.5,
-        xanchor: "center",
-        y: -0.16,
-        yanchor: "top",
-        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 14, color: "#4e6a73" },
-        itemwidth: 108,
-        itemsizing: "constant",
-      },
-      annotations: [
-        {
-          text: `<span style="font-size: 28px; font-weight: 700; color: #16313A;">${formatInteger(totalCases)}</span><br><span style="font-size: 12px; color: #5d7880; letter-spacing: 0.06em; text-transform: uppercase;">casos</span>`,
-          showarrow: false,
-          x: 0.5,
-          y: 0.5,
-          font: { family: '"Sora", "Trebuchet MS", sans-serif', size: 18, color: "#16313A" },
-          align: "center",
-        },
-      ],
-      uniformtext: { minsize: 10, mode: "hide" },
-    },
+    document.getElementById("states-chart"),
+    traces,
+    baseLayout({
+      barmode: "stack",
+      bargap: 0.38,
+      barcornerradius: 4,
+      separators: ",.",
+      showlegend: sexes.length > 1,
+      legend: { orientation: "h", x: 0, y: 1.08, traceorder: "normal", font: { color: theme.muted, size: fs(12) } },
+      margin: { t: 30, r: 24, b: 40, l: 120 },
+      xaxis: axis({ range: [0, maxTotal * (isNarrow() ? 1.6 : 1.28)], fixedrange: true, title: { text: "Notificações", font: { color: theme.muted, size: fs(12) } } }),
+      yaxis: axis({ autorange: "reversed", showgrid: false, fixedrange: true, ticks: "", tickfont: { color: theme.text, size: fs(13) } }),
+      annotations,
+    }),
     CHART_CONFIG
   );
 }
 
 function renderToxicChart(rows) {
+  const sexes = activeSexes();
   const grouped = {};
 
   rows.forEach((row) => {
-    const toxicGroup = row.toxic_group;
-    if (!grouped[toxicGroup]) {
-      grouped[toxicGroup] = { Masculino: 0, Feminino: 0, total: 0 };
+    if (!grouped[row.toxic_group]) {
+      grouped[row.toxic_group] = { Masculino: 0, Feminino: 0, total: 0 };
     }
-    grouped[toxicGroup][row.sex_label] += row.count;
-    grouped[toxicGroup].total += row.count;
+    grouped[row.toxic_group][row.sex_label] += row.count;
+    grouped[row.toxic_group].total += row.count;
   });
 
   const ranked = Object.entries(grouped)
     .map(([toxicGroup, values]) => ({ toxicGroup, ...values }))
-    .sort((left, right) => right.total - left.total)
-    .slice(0, 10)
-    .reverse();
+    .filter((item) => item.total > 0)
+    .sort((left, right) => right.total - left.total);
 
-  let traces;
-  if (selectedSex === "Todos") {
-    traces = ["Masculino", "Feminino"].map((sex) => ({
+  // Grupos além do top N são agregados em "Demais grupos" para manter o gráfico legível.
+  const head = ranked.slice(0, TOXIC_TOP_N);
+  const tail = ranked.slice(TOXIC_TOP_N);
+  if (tail.length) {
+    head.push({
+      toxicGroup: `Demais grupos (${tail.length})`,
+      Masculino: sum(tail.map((item) => item.Masculino)),
+      Feminino: sum(tail.map((item) => item.Feminino)),
+      total: sum(tail.map((item) => item.total)),
+    });
+  }
+
+  const sexTotals = Object.fromEntries(SEXES.map((sex) => [sex, sum(ranked.map((item) => item[sex]))]));
+  const isShare = toxicMode === "share";
+  const labels = head.map((item) => formatToxicGroupLabel(item.toxicGroup));
+
+  document.getElementById("toxic-note").textContent = isShare
+    ? "Percentual dentro de cada sexo. Compara o perfil de agentes entre mulheres e homens."
+    : `Os ${TOXIC_TOP_N} grupos mais frequentes no recorte; os demais aparecem agregados.`;
+
+  const traces = sexes.map((sex) => {
+    const values = head.map((item) =>
+      isShare ? (sexTotals[sex] ? (item[sex] / sexTotals[sex]) * 100 : 0) : item[sex]
+    );
+    return {
       type: "bar",
       orientation: "h",
       name: sex,
-      y: ranked.map((item) => formatToxicGroupLabel(item.toxicGroup)),
-      x: ranked.map((item) => item[sex]),
-      marker: { color: SEX_PALETTE[sex] },
-    }));
-  } else {
-    traces = [
-      {
-        type: "bar",
-        orientation: "h",
-        name: selectedSex,
-        y: ranked.map((item) => formatToxicGroupLabel(item.toxicGroup)),
-        x: ranked.map((item) => item[selectedSex]),
-        marker: { color: SEX_PALETTE[selectedSex] },
-      },
-    ];
-  }
+      y: labels,
+      x: values,
+      text: values.map((value) => (isShare ? `${formatDecimal(value)}%` : formatInteger(value))),
+      textposition: "outside",
+      cliponaxis: false,
+      textfont: { color: theme.muted, size: fs(11) },
+      marker: { color: theme.sex[sex] },
+      hovertemplate: isShare
+        ? `<b>%{y}</b><br>${sex}: %{x:.1f}% dos casos do sexo<extra></extra>`
+        : `<b>%{y}</b><br>${sex}: %{x:,.0f}<extra></extra>`,
+    };
+  });
+
+  const maxValue = Math.max(1, ...traces.flatMap((trace) => trace.x));
 
   Plotly.react(
     document.getElementById("toxic-chart"),
     traces,
-    {
-      ...PLOT_LAYOUT_BASE,
-      margin: { t: 30, r: 160, b: 56, l: 40 },
-      barmode: selectedSex === "Todos" ? "group" : "relative",
-      xaxis: { title: "Notificações", automargin: true },
-      yaxis: {
-        title: "",
-        automargin: true,
-        side: "right",
-        tickpadding: 12,
-        ticklabelstandoff: 10,
-        tickfont: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 11, color: "#16313A" },
-      },
-      legend: { orientation: "h", y: 1.12, x: 0.5, xanchor: "center" },
-    },
+    baseLayout({
+      barmode: "group",
+      bargap: 0.3,
+      bargroupgap: 0.08,
+      barcornerradius: 3,
+      separators: ",.",
+      showlegend: sexes.length > 1,
+      legend: { orientation: "h", x: 0, y: 1.08, traceorder: "normal", font: { color: theme.muted, size: fs(12) } },
+      margin: { t: 30, r: 24, b: 40, l: 170 },
+      xaxis: axis({
+        range: [0, maxValue * 1.18],
+        fixedrange: true,
+        ticksuffix: isShare ? "%" : "",
+        title: { text: isShare ? "% dos casos do sexo" : "Notificações", font: { color: theme.muted, size: fs(12) } },
+      }),
+      yaxis: axis({ autorange: "reversed", showgrid: false, fixedrange: true, ticks: "", tickfont: { color: theme.text, size: fs(12) } }),
+    }),
     CHART_CONFIG
   );
 }
 
-function renderDetailChart(rows) {
-  const note = document.getElementById("detail-note");
-  const groupedByState = Object.entries(groupBy(rows, "state"))
-    .map(([state, stateRows]) => ({
-      state,
-      total: sum(stateRows.map((row) => row.total_year)),
-    }))
-    .sort((left, right) => right.total - left.total);
-  const detailState = groupedByState[0]?.state || selectedStates[0] || null;
-  const detailTotal = groupedByState[0]?.total || 0;
-  const detailRows = detailState ? rows.filter((row) => row.state === detailState) : [];
-  const sexes = selectedSex === "Todos" ? ["Masculino", "Feminino"] : [selectedSex];
-
-  if (!detailState) {
-    note.textContent = "Sem estado disponível para o recorte atual.";
-  } else if (detailTotal > 0) {
-    note.textContent = `Foco automático em ${formatStateLabel(detailState)}, com ${formatInteger(detailTotal)} casos acumulados no recorte atual.`;
-  } else {
-    note.textContent = `Foco automático em ${formatStateLabel(detailState)}. No recorte atual, os estados selecionados não registram notificações.`;
-  }
-
-  const traces = sexes.map((sex) => {
-    const sexRows = detailRows.filter((row) => row.sex_label === sex);
-    const yearly = aggregateByYear(sexRows);
-    return {
-      type: "scatter",
-      mode: "lines+markers",
-      name: sex,
-      x: dashboardData.metadata.years,
-      y: dashboardData.metadata.years.map((year) => yearly.get(year) || 0),
-      line: { color: SEX_PALETTE[sex], width: 3 },
-      marker: { size: 8 },
-    };
-  });
-
-  Plotly.react(
-    document.getElementById("detail-chart"),
-    traces,
-    {
-      ...PLOT_LAYOUT_BASE,
-      margin: { t: 54, r: 20, b: 50, l: 55 },
-      xaxis: { title: "Ano", tickmode: "linear" },
-      yaxis: { title: "Notificações" },
-      legend: {
-        orientation: "h",
-        x: 0.02,
-        y: 1.12,
-        xanchor: "left",
-        font: { family: '"Source Sans 3", "Trebuchet MS", sans-serif', size: 12, color: "#5d7880" },
-      },
-    },
-    CHART_CONFIG
-  );
-}
-
-function renderStateTable(rows) {
-  const groupedByState = groupBy(rows, "state");
+function renderStateTable(stateRows) {
   const head = document.getElementById("state-summary-head");
   const body = document.getElementById("state-summary-body");
   const note = document.getElementById("table-note");
+  const sexes = activeSexes();
+
+  const rows = sortStatesByTotal(selectedStates).map((state) => {
+    const scoped = stateRows.filter((row) => row.state === state);
+    const female = sum(scoped.filter((row) => row.sex_label === "Feminino").map((row) => row.total_year));
+    const male = sum(scoped.filter((row) => row.sex_label === "Masculino").map((row) => row.total_year));
+    const value = sexes.length === 2 ? female + male : selectedSex === "Feminino" ? female : male;
+    return { state, female, male, total: female + male, value };
+  });
+  const scopeValue = sum(rows.map((row) => row.value));
 
   head.innerHTML = "";
   body.innerHTML = "";
 
   if (selectedSex === "Todos") {
-    note.textContent = "Tabela consolidada com os dois sexos e total acumulado dentro do recorte de estados selecionado.";
+    note.textContent = "Os dois sexos e o total acumulado nos estados selecionados.";
     head.innerHTML = `
       <th>Estado</th>
-      <th>Masculino</th>
       <th>Feminino</th>
+      <th>Masculino</th>
       <th>Total</th>
+      <th>F / M</th>
+      <th>Participação</th>
     `;
-
-    Object.entries(groupedByState)
-      .map(([state, stateRows]) => {
-        const male = sum(stateRows.filter((row) => row.sex_label === "Masculino").map((row) => row.total_year));
-        const female = sum(stateRows.filter((row) => row.sex_label === "Feminino").map((row) => row.total_year));
-        return {
-          state,
-          male,
-          female,
-          total: male + female,
-        };
-      })
-      .sort((left, right) => right.total - left.total)
-      .forEach((row) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${formatStateLabel(row.state)}</td>
-          <td>${formatInteger(row.male)}</td>
-          <td>${formatInteger(row.female)}</td>
-          <td>${formatInteger(row.total)}</td>
-        `;
-        body.appendChild(tr);
-      });
-    return;
+  } else {
+    note.textContent = `Somente o sexo ${selectedSex.toLowerCase()}, com a participação de cada estado no recorte.`;
+    head.innerHTML = `
+      <th>Estado</th>
+      <th>${selectedSex}</th>
+      <th>Participação</th>
+    `;
   }
 
-  note.textContent = `Tabela focada apenas no recorte ${selectedSex.toLowerCase()}, com participação percentual por estado.`;
-  head.innerHTML = `
-    <th>Estado</th>
-    <th>${selectedSex}</th>
-    <th>% do recorte</th>
-  `;
+  rows.forEach((row) => {
+    const share = scopeValue ? (row.value / scopeValue) * 100 : 0;
+    const shareCell = `
+      <div class="share-cell">
+        <span>${formatPercent(share)}</span>
+        <div class="share-bar" aria-hidden="true"><span style="width:${share.toFixed(1)}%"></span></div>
+      </div>`;
+    const tr = document.createElement("tr");
 
-  const totalScope = sum(rows.map((row) => row.total_year));
-  Object.entries(groupedByState)
-    .map(([state, stateRows]) => {
-      const total = sum(stateRows.map((row) => row.total_year));
-      return {
-        state,
-        total,
-        share: totalScope ? (total / totalScope) * 100 : 0,
-      };
-    })
-    .sort((left, right) => right.total - left.total)
-    .forEach((row) => {
-      const tr = document.createElement("tr");
+    if (selectedSex === "Todos") {
+      const femaleShare = row.total ? (row.female / row.total) * 100 : 0;
       tr.innerHTML = `
         <td>${formatStateLabel(row.state)}</td>
-        <td>${formatInteger(row.total)}</td>
-        <td>${row.share.toFixed(1)}%</td>
+        <td>${formatInteger(row.female)}</td>
+        <td>${formatInteger(row.male)}</td>
+        <td><strong>${formatInteger(row.total)}</strong></td>
+        <td>
+          <div class="share-cell" title="${formatPercent(femaleShare)} feminino">
+            <span>${formatPercent(femaleShare)}</span>
+            <div class="split-bar" aria-hidden="true">
+              <span style="width:${femaleShare.toFixed(1)}%; background:${theme.sex.Feminino}"></span>
+              <span style="width:${(100 - femaleShare).toFixed(1)}%; background:${theme.sex.Masculino}"></span>
+            </div>
+          </div>
+        </td>
+        <td>${shareCell}</td>
       `;
-      body.appendChild(tr);
-    });
+    } else {
+      tr.innerHTML = `
+        <td>${formatStateLabel(row.state)}</td>
+        <td><strong>${formatInteger(row.value)}</strong></td>
+        <td>${shareCell}</td>
+      `;
+    }
+    body.appendChild(tr);
+  });
 }
 
-function renderInsights(rows, tidyRows) {
+function renderInsights(rows, stateRows, tidyRows) {
   const list = document.getElementById("insight-list");
-  const note = document.getElementById("insight-note");
   list.innerHTML = "";
-  note.textContent = "Os destaques abaixo acompanham o recorte ativo de sexo e estados.";
 
-  const insights = buildDynamicInsights(rows, tidyRows);
-
-  insights.forEach((insight) => {
+  buildDynamicInsights(rows, stateRows, tidyRows).forEach((insight) => {
     const item = document.createElement("li");
-    item.textContent = insight;
+    item.innerHTML = insight;
     list.appendChild(item);
   });
 }
 
-function buildDynamicInsights(rows, tidyRows) {
-  if (!rows.length) {
+function buildDynamicInsights(rows, stateRows, tidyRows) {
+  const totalCases = sum(rows.map((row) => row.total_year));
+  if (!totalCases) {
     return ["Não há registros para o recorte atual."];
   }
 
-  const totalCases = sum(rows.map((row) => row.total_year));
-  const groupedByState = Object.entries(groupBy(rows, "state"))
-    .map(([state, stateRows]) => ({
-      state,
-      total: sum(stateRows.map((row) => row.total_year)),
-    }))
-    .sort((left, right) => right.total - left.total);
-  const groupedByYear = Object.entries(groupBy(rows, "year"))
-    .map(([year, yearRows]) => ({
-      year: Number(year),
-      total: sum(yearRows.map((row) => row.total_year)),
-    }))
-    .sort((left, right) => right.total - left.total);
+  const topState = totalsByState(rows)[0];
+  const series = seriesByYear(rows);
+  const peakIndex = series.indexOf(Math.max(...series));
   const groupedToxic = Object.entries(groupBy(tidyRows, "toxic_group"))
-    .map(([toxicGroup, toxicRows]) => ({
-      toxicGroup,
-      total: sum(toxicRows.map((row) => row.count)),
-    }))
+    .map(([toxicGroup, toxicRows]) => ({ toxicGroup, total: sum(toxicRows.map((row) => row.count)) }))
     .sort((left, right) => right.total - left.total);
-
-  const topState = groupedByState[0];
-  const peakYear = groupedByYear[0];
+  const toxicTotal = sum(groupedToxic.map((item) => item.total));
   const topToxic = groupedToxic[0];
 
+  // Comparação entre a primeira e a segunda metade da série.
+  const half = Math.floor(series.length / 2);
+  const firstHalf = sum(series.slice(0, half));
+  const secondHalf = sum(series.slice(series.length - half));
+
   const insights = [
-    `${formatInteger(totalCases)} casos compõem o recorte atual, distribuído por ${selectedStates.length} estado(s).`,
-    `${formatStateLabel(topState.state)} lidera este recorte com ${formatInteger(topState.total)} notificações acumuladas.`,
-    `O pico anual do recorte ocorre em ${peakYear.year}, com ${formatInteger(peakYear.total)} notificações.`,
+    `<strong>${formatStateLabel(topState.state)}</strong> responde por ${formatPercent((topState.total / totalCases) * 100)} do recorte, com ${formatInteger(topState.total)} notificações.`,
+    `O pico anual ocorre em <strong>${years()[peakIndex]}</strong>, com ${formatInteger(series[peakIndex])} notificações.`,
   ];
 
-  if (topToxic) {
-    insights.push(`${formatToxicGroupLabel(topToxic.toxicGroup)} é o grupo tóxico mais frequente no recorte atual.`);
+  if (firstHalf > 0) {
+    insights.push(
+      `Os últimos ${half} anos somam <strong>${formatDecimal(secondHalf / firstHalf)}×</strong> o volume dos primeiros ${half} anos da série.`
+    );
+  }
+
+  if (topToxic && toxicTotal) {
+    insights.push(
+      `<strong>${formatToxicGroupLabel(topToxic.toxicGroup)}</strong> é o grupo tóxico mais frequente, com ${formatPercent((topToxic.total / toxicTotal) * 100)} dos agentes registrados.`
+    );
   }
 
   if (selectedSex === "Todos") {
-    const maleTotal = sum(rows.filter((row) => row.sex_label === "Masculino").map((row) => row.total_year));
     const femaleTotal = sum(rows.filter((row) => row.sex_label === "Feminino").map((row) => row.total_year));
-    const femaleShare = totalCases ? (femaleTotal / totalCases) * 100 : 0;
-    insights.push(`Mulheres representam ${femaleShare.toFixed(1)}% do recorte, frente a ${formatInteger(maleTotal)} casos masculinos.`);
+    insights.push(
+      `Mulheres representam <strong>${formatPercent((femaleTotal / totalCases) * 100)}</strong> do recorte, frente a ${formatInteger(totalCases - femaleTotal)} casos masculinos.`
+    );
+  } else {
+    const scopeTotal = sum(stateRows.map((row) => row.total_year));
+    insights.push(
+      `O sexo ${selectedSex.toLowerCase()} responde por <strong>${formatPercent((totalCases / scopeTotal) * 100)}</strong> dos casos nos estados selecionados.`
+    );
   }
 
   return insights;
 }
+
+/* ---------- Background ---------- */
+
+// Campo de pontos que ondula lentamente e reage ao cursor, com duas linhas de série
+// ao fundo. Fica atrás do conteúdo, pausa com a aba oculta e respeita reduced-motion.
+function initBackground() {
+  const canvas = document.getElementById("bg-canvas");
+  const glow = document.getElementById("bg-glow");
+  const ctx = canvas.getContext("2d");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999, strength: 0, target: 0 };
+  let width = 0;
+  let height = 0;
+  let spacing = 34;
+  let frame = null;
+
+  const resize = () => {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    spacing = width < 720 ? 30 : width > 2200 ? 40 : 34;
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    if (reduceMotion) {
+      draw(0);
+    }
+  };
+
+  const draw = (time) => {
+    const rgb = theme.dot || "19, 144, 130";
+    const dark = document.documentElement.dataset.theme === "dark";
+    const baseAlpha = dark ? 0.1 : 0.12;
+    const radius = Math.max(180, Math.min(width, height) * 0.28);
+
+    pointer.x += (pointer.tx - pointer.x) * 0.12;
+    pointer.y += (pointer.ty - pointer.y) * 0.12;
+    pointer.strength += (pointer.target - pointer.strength) * 0.06;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const t = time * 0.00035;
+    for (let y = spacing / 2; y < height; y += spacing) {
+      for (let x = spacing / 2; x < width; x += spacing) {
+        const wave = Math.sin(x * 0.0042 + t) + Math.cos(y * 0.0051 - t * 0.8) + Math.sin((x + y) * 0.0021 + t * 0.6);
+        let alpha = baseAlpha * (0.45 + 0.55 * ((wave + 3) / 6));
+        let size = 1.1;
+        let px = x;
+        let py = y;
+
+        const dx = x - pointer.x;
+        const dy = y - pointer.y;
+        const distance = Math.hypot(dx, dy);
+        if (distance < radius && pointer.strength > 0.01) {
+          const k = (1 - distance / radius) ** 2 * pointer.strength;
+          px += (dx / (distance || 1)) * k * 10;
+          py += (dy / (distance || 1)) * k * 10;
+          alpha += k * (dark ? 0.45 : 0.5);
+          size += k * 1.6;
+        }
+
+        ctx.fillStyle = `rgba(${rgb}, ${alpha.toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(px, py, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Duas linhas suaves, lembrando séries temporais, que se curvam perto do cursor.
+    [0.32, 0.74].forEach((level, index) => {
+      ctx.beginPath();
+      for (let x = -20; x <= width + 20; x += 16) {
+        const base = height * level
+          + Math.sin(x * 0.0032 + t * (index ? 1.3 : 1)) * 38
+          + Math.sin(x * 0.0011 - t * 0.7 + index) * 54;
+        const dx = x - pointer.x;
+        const pull = Math.exp(-(dx * dx) / (2 * 160 * 160)) * pointer.strength;
+        const y = base + (pointer.y - base) * pull * 0.18;
+        if (x === -20) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.strokeStyle = `rgba(${rgb}, ${dark ? 0.1 : 0.09})`;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+    });
+  };
+
+  const loop = (time) => {
+    draw(time);
+    frame = requestAnimationFrame(loop);
+  };
+
+  const moveTo = (x, y) => {
+    pointer.tx = x;
+    pointer.ty = y;
+    if (pointer.x < -1000) {
+      pointer.x = x;
+      pointer.y = y;
+    }
+    pointer.target = 1;
+    glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    glow.classList.add("is-visible");
+  };
+
+  window.addEventListener("pointermove", (event) => moveTo(event.clientX, event.clientY), { passive: true });
+  window.addEventListener("pointerdown", (event) => moveTo(event.clientX, event.clientY), { passive: true });
+  document.addEventListener("pointerleave", () => {
+    pointer.target = 0;
+    glow.classList.remove("is-visible");
+  });
+  window.addEventListener("blur", () => {
+    pointer.target = 0;
+    glow.classList.remove("is-visible");
+  });
+  window.addEventListener("resize", resize);
+  document.addEventListener("visibilitychange", () => {
+    if (reduceMotion) {
+      return;
+    }
+    if (document.hidden) {
+      cancelAnimationFrame(frame);
+      frame = null;
+    } else if (!frame) {
+      frame = requestAnimationFrame(loop);
+    }
+  });
+
+  resize();
+  if (!reduceMotion) {
+    frame = requestAnimationFrame(loop);
+  }
+}
+
+/* ---------- Utils ---------- */
 
 function aggregateByYear(rows) {
   const totals = new Map();
@@ -26772,16 +27540,19 @@ function sum(values) {
 }
 
 function formatInteger(value) {
-  return new Intl.NumberFormat("pt-BR", {
-    maximumFractionDigits: 0,
-  }).format(value);
+  return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 }).format(value);
+}
+
+function formatDecimal(value) {
+  return new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
+}
+
+function formatPercent(value) {
+  return `${formatDecimal(value)}%`;
 }
 
 function formatDateTime(value) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(value));
 }
 
 function formatStateLabel(value) {
