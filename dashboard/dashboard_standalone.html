@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard de Intoxicação Exógena em Idosos</title>
-    <link rel="icon" href="./favicon.svg?v=20261011" type="image/svg+xml" />
-    <link rel="shortcut icon" href="./favicon.svg?v=20261011" />
+    <link rel="icon" href="./favicon.svg?v=20261012" type="image/svg+xml" />
+    <link rel="shortcut icon" href="./favicon.svg?v=20261012" />
     <style>
 :root {
   color-scheme: light;
@@ -706,6 +706,10 @@ body {
   height: clamp(360px, 25vw, 640px);
 }
 
+.plot-tall {
+  height: clamp(480px, 34vw, 820px);
+}
+
 .plot-heat {
   min-height: 300px;
 }
@@ -953,6 +957,10 @@ body {
     padding: 8px 18px 18px;
   }
 
+  .plot-tall {
+    height: 520px;
+  }
+
   .plot,
   .plot-lg {
     min-height: 340px;
@@ -1174,7 +1182,7 @@ body {
               <p class="panel-note" id="states-note"></p>
             </div>
           </div>
-          <div class="plot plot-lg" id="states-chart"></div>
+          <div class="plot plot-tall" id="states-chart"></div>
         </article>
 
         <article class="panel panel-span-6">
@@ -1186,7 +1194,7 @@ body {
             </div>
             <div class="segmented-control segmented-control--sm" id="toxic-mode" role="group" aria-label="Escala do perfil tóxico"></div>
           </div>
-          <div class="plot plot-lg" id="toxic-chart"></div>
+          <div class="plot plot-tall" id="toxic-chart"></div>
         </article>
 
         <article class="panel panel-span-7">
@@ -5112,7 +5120,7 @@ return Plotly;
 window.__DASHBOARD_DATA__ = {
   "metadata": {
     "title": "Dashboard de intoxicação exógena em idosos",
-    "generated_at_utc": "2026-10-10T23:13:13.053858+00:00",
+    "generated_at_utc": "2026-10-11T01:58:34.309803+00:00",
     "start_year": 2007,
     "end_year": 2025,
     "states": [
@@ -26444,8 +26452,16 @@ function readTheme() {
   };
 }
 
+// Escala de layout (acompanha o tamanho da fonte raiz da página).
+function px(value) {
+  return Math.round(value * theme.scale);
+}
+
+// Escala de texto dos gráficos: um pouco maior que a do layout para manter ticks e
+// rótulos legíveis. A exportação de imagens pode aumentar via window.__CHART_FONT_BOOST.
 function fs(value) {
-  return Math.round(value * theme.scale * 10) / 10;
+  const boost = window.__CHART_FONT_BOOST || 1.22;
+  return Math.round(value * theme.scale * boost * 10) / 10;
 }
 
 function baseLayout(overrides = {}) {
@@ -26470,8 +26486,8 @@ function axis(overrides = {}) {
     zerolinecolor: theme.axis,
     linecolor: theme.axis,
     tickcolor: theme.axis,
-    tickfont: { color: theme.muted, size: fs(12) },
-    title: { font: { color: theme.muted, size: fs(12) } },
+    tickfont: { color: theme.muted, size: fs(13) },
+    title: { font: { color: theme.muted, size: fs(13) } },
     automargin: true,
     ...overrides,
   };
@@ -26860,11 +26876,11 @@ function renderTrendChart(rows) {
     document.getElementById("trend-chart"),
     traces,
     baseLayout({
-      margin: { t: 16, r: fs(isNarrow() ? 92 : 120), b: 40, l: 52 },
+      margin: { t: 16, r: fs(isNarrow() ? 92 : 112), b: 40, l: 52 },
       hovermode: "x unified",
       separators: ",.",
       xaxis: yearAxis({ range: [2006.5, 2025.5], dtick: isNarrow() ? 6 : 2, showspikes: true, spikemode: "across", spikecolor: theme.axis, spikethickness: 1, spikedash: "dot" }),
-      yaxis: axis({ title: { text: "Notificações", font: { color: theme.muted, size: fs(12) } }, rangemode: "tozero", fixedrange: true }),
+      yaxis: axis({ title: { text: "Notificações", font: { color: theme.muted, size: fs(13) } }, rangemode: "tozero", tickformat: ",d", fixedrange: true }),
       annotations,
     }),
     CHART_CONFIG
@@ -26991,7 +27007,7 @@ function renderHeatmap(rows) {
     });
   });
 
-  const heatHeight = Math.max(220, states.length * fs(54) + fs(70));
+  const heatHeight = Math.max(240, states.length * Math.max(px(54), fs(40)) + fs(60));
   chartNode.style.minHeight = `${heatHeight}px`;
 
   Plotly.react(
@@ -27015,7 +27031,7 @@ function isNarrow() {
 
 function multiplesColumns() {
   const width = document.getElementById("multiples-chart").clientWidth || window.innerWidth;
-  return Math.max(1, Math.min(5, Math.floor(width / fs(250))));
+  return Math.max(1, Math.min(5, Math.floor(width / px(250))));
 }
 
 function renderMultiples(rows) {
@@ -27031,11 +27047,11 @@ function renderMultiples(rows) {
   const traces = [];
   const layout = baseLayout({
     showlegend: sexes.length > 1,
-    legend: { orientation: "h", x: 1, xanchor: "right", y: 0.99, yanchor: "top", yref: "container", traceorder: "normal", font: { color: theme.muted, size: fs(12) } },
-    margin: { t: 44, r: 12, b: 30, l: 40 },
+    legend: { orientation: "h", x: 0, xanchor: "left", y: 1, yanchor: "top", yref: "container", traceorder: "normal", font: { color: theme.muted, size: fs(12) } },
+    margin: { t: fs(66), r: 12, b: 30, l: 40 },
     hovermode: "x unified",
     separators: ",.",
-    height: rowCount * fs(210) + fs(40),
+    height: rowCount * px(230) + fs(66),
     annotations: [],
   });
 
@@ -27078,6 +27094,7 @@ function renderMultiples(rows) {
       domain: [yTop - cellHeight, yTop],
       anchor: `x${suffix}`,
       rangemode: "tozero",
+      tickformat: ",d",
       nticks: 4,
       fixedrange: true,
     });
@@ -27149,7 +27166,7 @@ function renderStatesChart(stateRows) {
       showlegend: sexes.length > 1,
       legend: { orientation: "h", x: 0, y: 1.08, traceorder: "normal", font: { color: theme.muted, size: fs(12) } },
       margin: { t: 30, r: 24, b: 40, l: 120 },
-      xaxis: axis({ range: [0, maxTotal * (isNarrow() ? 1.6 : 1.28)], fixedrange: true, title: { text: "Notificações", font: { color: theme.muted, size: fs(12) } } }),
+      xaxis: axis({ range: [0, maxTotal * (isNarrow() ? 1.6 : 1.28)], tickformat: ",d", fixedrange: true, title: { text: "Notificações", font: { color: theme.muted, size: fs(12) } } }),
       yaxis: axis({ autorange: "reversed", showgrid: false, fixedrange: true, ticks: "", tickfont: { color: theme.text, size: fs(13) } }),
       annotations,
     }),
@@ -27206,6 +27223,7 @@ function renderToxicChart(rows) {
       x: values,
       text: values.map((value) => (isShare ? `${formatDecimal(value)}%` : formatInteger(value))),
       textposition: "outside",
+      constraintext: "none",
       cliponaxis: false,
       textfont: { color: theme.muted, size: fs(11) },
       marker: { color: theme.sex[sex] },
@@ -27222,8 +27240,8 @@ function renderToxicChart(rows) {
     traces,
     baseLayout({
       barmode: "group",
-      bargap: 0.3,
-      bargroupgap: 0.08,
+      bargap: 0.24,
+      bargroupgap: 0.06,
       barcornerradius: 3,
       separators: ",.",
       showlegend: sexes.length > 1,
@@ -27233,6 +27251,7 @@ function renderToxicChart(rows) {
         range: [0, maxValue * 1.18],
         fixedrange: true,
         ticksuffix: isShare ? "%" : "",
+        tickformat: isShare ? "" : ",d",
         title: { text: isShare ? "% dos casos do sexo" : "Notificações", font: { color: theme.muted, size: fs(12) } },
       }),
       yaxis: axis({ autorange: "reversed", showgrid: false, fixedrange: true, ticks: "", tickfont: { color: theme.text, size: fs(12) } }),

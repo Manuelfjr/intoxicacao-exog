@@ -697,6 +697,10 @@ body {
   height: clamp(360px, 25vw, 640px);
 }
 
+.plot-tall {
+  height: clamp(480px, 34vw, 820px);
+}
+
 .plot-heat {
   min-height: 300px;
 }
@@ -942,6 +946,10 @@ body {
 
   .insight-list {
     padding: 8px 18px 18px;
+  }
+
+  .plot-tall {
+    height: 520px;
   }
 
   .plot,
