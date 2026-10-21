@@ -713,6 +713,10 @@ function isNarrow() {
 }
 
 function multiplesColumns() {
+  // A exportação de imagens pode fixar o número de colunas (ex.: 3 para o banner).
+  if (window.__MULTIPLES_COLUMNS) {
+    return window.__MULTIPLES_COLUMNS;
+  }
   const width = document.getElementById("multiples-chart").clientWidth || window.innerWidth;
   return Math.max(1, Math.min(5, Math.floor(width / px(250))));
 }
@@ -721,8 +725,9 @@ function renderMultiples(rows) {
   const states = sortStatesByTotal(selectedStates);
   const columns = Math.min(multiplesColumns(), states.length);
   const rowCount = Math.ceil(states.length / columns);
-  const gapX = columns > 1 ? 0.05 : 0;
-  const gapY = rowCount > 1 ? 0.12 / rowCount + 0.06 : 0;
+  const gaps = window.__MULTIPLES_GAPS || {};
+  const gapX = columns > 1 ? gaps.x ?? 0.05 : 0;
+  const gapY = gaps.y ?? (rowCount > 1 ? 0.12 / rowCount + 0.06 : 0);
   const cellWidth = (1 - gapX * (columns - 1)) / columns;
   const cellHeight = (1 - gapY * (rowCount - 1)) / rowCount;
   const sexes = activeSexes();

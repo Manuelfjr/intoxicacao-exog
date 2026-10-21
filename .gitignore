@@ -5,3 +5,8 @@ __pycache__/
 .venv/
 venv/
 site/
+
+# Saídas locais de exportação (banner e imagens)
+banner-*.pdf
+graficos-banner.pdf
+graficos-banner.zip

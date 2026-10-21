@@ -19,6 +19,22 @@ poetry run python dashboard/export_html.py
 
 O arquivo gerado fica em `dashboard/dashboard_standalone.html`.
 
+## Exportando os gráficos em imagem (banner/artigo)
+
+```bash
+poetry run python dashboard/export_charts.py
+```
+
+Gera na raiz do repositório o `graficos-banner.zip`, com cada gráfico em PNG (alta resolução) e SVG, e o `graficos-banner.pdf`, com um gráfico vetorial por página, e fontes ampliadas para leitura em banner. Requer o Google Chrome instalado (ou o caminho em `CHROME`). Ajuste o tamanho do texto com `--boost` e a resolução com `--scale`.
+
+## Atualizando os gráficos do banner
+
+```bash
+uv run --no-project --with pymupdf python dashboard/update_banner.py banner-original.pdf
+```
+
+Renderiza de novo os três gráficos usados no banner (mapa de calor, agentes tóxicos e série anual), cada um na mesma proporção do espaço que ocupa, e grava `banner-atualizado.pdf` com as imagens trocadas no lugar. O restante do banner não é alterado.
+
 ## Gerando a versão para GitHub Pages
 
 ```bash
